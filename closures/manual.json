@@ -1062,10 +1062,10 @@
   },
   {
    "id": "ev9-pl-glucholazy-river-2026",
-   "kind": "caution",
+   "kind": "closure",
    "title": {
-    "cs": "Głuchołazy: cesta podél Białé Głuchołaské s omezeným vjezdem (po povodni)",
-    "en": "Głuchołazy: riverside road along the Biała Głuchołaska with restricted entry (after the flood)"
+    "cs": "Głuchołazy: cesta podél Białé Głuchołaské uzavřena (po povodni)",
+    "en": "Głuchołazy: riverside road along the Biała Głuchołaska closed (after the flood)"
    },
    "from": "2026-08-01",
    "to": "2027-09-30",
@@ -1115,7 +1115,12 @@
      ]
     ]
    },
-   "approx": false
+   "approx": false,
+   "detour": {
+    "cs": "Objížďka po okolních ulicích (aplikace ji naplánuje).",
+    "en": "Detour on nearby streets (planned by the app)."
+   },
+   "verified_by": "Dominik Petr, local knowledge, 2026-11-18"
   },
   {
    "id": "ev9-cz-mikulovice-bela-path-2026",
