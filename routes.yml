@@ -42,7 +42,7 @@ routes:
   num: 14
   name: EuroVelo 14 · Waters of Central Europe
   osm: relation[route=bicycle][network=icn][ref="EV14"]
-  status: planned
+  status: build
 - id: ev15
   kind: ev
   num: 15
