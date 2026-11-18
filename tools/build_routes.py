@@ -344,25 +344,33 @@ def countries_along(bundle, old):
     return out
 
 
-def junctions(lines):
-    """Where two routes meet (within 30 m), one point per meeting, for switching routes."""
+def junctions(lines, step=60, near_m=30, every=30000):
+    """Where two routes meet: the start and end of every stretch they share (within 30 m),
+    plus a point every 30 km along long shared stretches, so the planner can switch anywhere sensible."""
     out = []
     ids = list(lines)
     for i, a in enumerate(ids):
         for b in ids[i + 1:]:
             la, lb = lines[a], lines[b]
-            ax0, ay0, ax1, ay1 = min(p[0] for p in la.pts), min(p[1] for p in la.pts), max(p[0] for p in la.pts), max(p[1] for p in la.pts)
-            if max(p[0] for p in lb.pts) < ax0 or min(p[0] for p in lb.pts) > ax1 or max(p[1] for p in lb.pts) < ay0 or min(p[1] for p in lb.pts) > ay1:
+            xa = [p[0] for p in la.pts]; ya = [p[1] for p in la.pts]
+            xb = [p[0] for p in lb.pts]; yb = [p[1] for p in lb.pts]
+            if max(xb) < min(xa) or min(xb) > max(xa) or max(yb) < min(ya) or min(yb) > max(ya):
                 continue
-            last = -1e9
-            for d in np.arange(0, la.length, 200):
-                p = la.point_at(d)
-                n = lb.nearest(p, 30)
-                if n and d - last > 20000:
-                    out.append({"a": a, "b": b, "pa": p, "pb": lb.point_at(n[1])})
-                    last = d
-                elif n:
-                    last = d if d - last > 1000 else last
+            runs, cur = [], None
+            for d in np.arange(0, la.length, step):
+                n = lb.nearest(la.point_at(d), near_m)
+                if n:
+                    if cur and d - cur[1] <= 3 * step:
+                        cur[1] = d
+                    else:
+                        cur = [d, d]; runs.append(cur)
+            for d0, d1 in runs:
+                marks = [d0] + list(np.arange(d0 + every, d1 - every / 2, every)) + ([d1] if d1 - d0 > 1000 else [])
+                for d in marks:
+                    p = la.point_at(d)
+                    n = lb.nearest(p, near_m + 20)
+                    if n:
+                        out.append({"a": a, "b": b, "pa": p, "pb": lb.point_at(n[1])})
     return out
 
 
