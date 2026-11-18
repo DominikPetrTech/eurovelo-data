@@ -45,6 +45,13 @@ jobs:
           else
             python tools/update_closures.py --no-osm
           fi
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - name: Sanity check (routes, closures, detours with the real router)
+        if: always()
+        continue-on-error: true
+        timeout-minutes: 60
+        run: node tools/check.mjs
       - name: Commit
         if: always()
         run: |

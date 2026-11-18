@@ -27,3 +27,12 @@ re-runs the update straight away (without the slow OSM scan).
 - `via` = waypoints of a signed detour, in route order; the app rides them first.
 
 Data: © OpenStreetMap contributors (ODbL); EuroVelo GPX © ECF/EuroVelo (ODbL); JSDI © ŘSD ČR.
+
+## Weekly sanity check
+`tools/check.mjs` (runs in the workflow after the closures update) loads every route with the app's own
+planner (`app-source/`, a copy of the app as deployed) and the public Valhalla router, and writes
+`closures/checks.md` / `checks.json`: route gaps, zigzags, a line that doubles back, expired or reversed dates,
+duplicate closures, and for every active closure whether the detour was found, how long it is, and whether it
+runs through another closure. The weekly Claude task reads it and fixes what it can.
+
+`app-source/` is the app's source (what is uploaded to nexisrail.cz/eurovelo) kept here as a backup and for the checks.

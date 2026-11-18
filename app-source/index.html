@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#0f4c9c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>EuroVelo Nav by NEXIS Rail</title>
+<meta name="apple-mobile-web-app-title" content="EuroVelo Nav">
+<meta name="application-name" content="EuroVelo Nav by NEXIS Rail">
+<meta name="description" content="Navigace po trasách EuroVelo s uzavírkami a objížďkami. Od NEXIS Rail.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-512.png">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="lib/maplibre-gl.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="map" aria-label="Map"></div>
+
+<!-- Turn instruction, shown while navigating -->
+<section id="turn" class="turn" hidden aria-live="polite">
+  <div class="turn-main">
+    <div class="glyph" id="turn-glyph"></div>
+    <div class="turn-text">
+      <div class="turn-dist" id="turn-dist">—</div>
+      <div class="turn-what" id="turn-what"></div>
+    </div>
+  </div>
+  <div class="turn-then" id="turn-then" hidden></div>
+</section>
+<div id="warn" class="warn" hidden role="status"></div>
+<div id="toast" class="toast" hidden role="status"></div>
+
+<div class="fab-col">
+  <button class="fab" id="btn-lang" type="button" aria-label="Language">CZ</button>
+  <button class="fab" id="btn-voice" type="button" aria-label="Voice" aria-pressed="true"></button>
+  <button class="fab" id="btn-locate" type="button" aria-label="My location"></button>
+</div>
+
+<!-- Bottom sheet: search → preview → riding -->
+<section id="sheet" class="sheet">
+  <div class="sheet-grip" aria-hidden="true"></div>
+
+  <div id="panel-search">
+    <div class="brand"><b>EuroVelo Nav</b> <span>by NEXIS Rail</span></div>
+    <div class="install" id="install" hidden>
+      <div class="install-text"><b data-i18n="installTitle"></b><span id="install-how"></span></div>
+      <button type="button" class="btn primary install-go" id="install-go" data-i18n="install" hidden></button>
+      <button type="button" class="link install-x" id="install-x" aria-label="×">×</button>
+    </div>
+    <div class="search">
+      <button type="button" class="ev-badge" aria-label="EuroVelo route"><span>9</span></button>
+      <input id="q" type="search" autocomplete="off" enterkeyhint="search" data-i18n-placeholder="where">
+    </div>
+    <ul id="results" class="results" hidden></ul>
+    <button type="button" class="saved-trip" id="saved-trip" hidden></button>
+    <div class="chips" id="chips"></div>
+    <p class="hint" id="hint"></p>
+    <p class="legal-links"><a href="legal/privacy.html" data-i18n="privacy"></a> · <a href="legal/terms.html" data-i18n="terms"></a> · <a href="legal/licenses.html" data-i18n="licenses"></a></p>
+  </div>
+
+  <div id="panel-preview" hidden>
+    <div class="dest-row">
+      <div>
+        <div class="dest-name" id="dest-name"></div>
+        <div class="dest-sub" id="dest-sub"></div>
+      </div>
+      <button class="link" id="btn-change" type="button" data-i18n="change"></button>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="profile" id="profile" hidden>
+      <svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true"><path class="area"/><path class="ln"/><g class="nl"></g><line class="cur" y1="0" y2="100" hidden/></svg>
+      <div class="pf-labels"></div>
+      <div class="pf-read" hidden></div>
+    </div>
+    <ul class="notes" id="notes"></ul>
+    <div class="offline" id="offline">
+      <button type="button" class="off-btn" id="btn-offline"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="off-label"></span></button>
+      <div class="off-bar" id="off-bar" hidden><i></i></div>
+      <button type="button" class="link" id="btn-offline-x" hidden></button>
+    </div>
+    <div class="trip" id="trip" hidden>
+      <div class="trip-head">
+        <b data-i18n="sleep"></b>
+        <div class="seg" id="pace" role="group"><button type="button" data-v="50">50</button><button type="button" data-v="80">80</button><button type="button" data-v="110">110</button><span data-i18n="perDay"></span></div>
+      </div>
+      <label class="trip-date"><span data-i18n="depart"></span><input type="date" id="trip-date"><button type="button" class="link" id="trip-date-clear" hidden>×</button></label>
+      <p class="trip-hint" id="trip-hint"></p>
+      <ol class="nights" id="nights"></ol>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="btn-go" type="button" data-i18n="go"></button>
+      <button class="btn" id="btn-sim" type="button" data-i18n="simulate"></button>
+    </div>
+  </div>
+
+  <div id="panel-ride" hidden>
+    <div class="ride-row">
+      <div class="ride-stat"><b id="ride-left">—</b><span data-i18n="left"></span></div>
+      <div class="ride-stat"><b id="ride-eta">—</b><span data-i18n="eta"></span></div>
+      <div class="ride-stat"><b id="ride-on">—</b><span id="ride-on-l"></span></div>
+      <button class="btn danger" id="btn-stop" type="button" data-i18n="stop"></button>
+    </div>
+  </div>
+</section>
+
+<script src="lib/maplibre-gl.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

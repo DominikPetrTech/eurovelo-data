@@ -1,0 +1,135 @@
+{
+ "date": "2026-11-18",
+ "issues": [
+  {
+   "sev": "medium",
+   "route": "ev14",
+   "what": "long gap",
+   "detail": "19.0 km at 19.3496,47.5964"
+  },
+  {
+   "sev": "medium",
+   "route": "ev9",
+   "what": "detour through closure",
+   "detail": "ev9-cz-zeruvky-iii5709-2026 detour passes jsdi-7147645"
+  },
+  {
+   "sev": "low",
+   "route": "ev9",
+   "what": "duplicate?",
+   "detail": "jsdi-7147645 overlaps ev9-cz-zeruvky-iii5709-2026"
+  }
+ ],
+ "detours": [
+  {
+   "route": "ev9",
+   "id": "ev9-pl-glucholazy-river-2026",
+   "closed": 1118,
+   "detour": 2756,
+   "plan": 5787,
+   "ratio": 0.81,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev9",
+   "id": "ev9-cz-mikulovice-bela-path-2026",
+   "closed": 395,
+   "detour": 2924,
+   "plan": 6355,
+   "ratio": 0.99,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev9",
+   "id": "ev9-cz-mikulovice-nabrezni-gap",
+   "closed": 206,
+   "detour": 2924,
+   "plan": 6166,
+   "ratio": 0.99,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev9",
+   "id": "ev9-cz-mikulovice-bela-path2-2026",
+   "closed": 430,
+   "detour": 2924,
+   "plan": 6390,
+   "ratio": 0.99,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev9",
+   "id": "ev9-cz-pisecna-mk-2026",
+   "closed": 627,
+   "detour": 1797,
+   "plan": 6613,
+   "ratio": 1,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev9",
+   "id": "jsdi-7236966",
+   "closed": 1395,
+   "detour": 5961,
+   "plan": 10736,
+   "ratio": 1.45,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev9",
+   "id": "ev9-cz-zeruvky-iii5709-2026",
+   "closed": 815,
+   "detour": 2785,
+   "plan": 7704,
+   "ratio": 1.13,
+   "signed": true,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev9",
+   "id": "jsdi-7147645",
+   "closed": 820,
+   "detour": 2785,
+   "plan": 7709,
+   "ratio": 1.13,
+   "signed": true,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev9",
+   "id": "ev9-cz-blucina-dunavka-2026",
+   "closed": 701,
+   "detour": 5295,
+   "plan": 7480,
+   "ratio": 1.12,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev9",
+   "id": "jsdi-7300955",
+   "closed": 734,
+   "detour": 985,
+   "plan": 6873,
+   "ratio": 1.02,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  }
+ ]
+}

@@ -236,6 +236,10 @@
     "en": "Official detour on local streets in Uherčice."
    },
    "kind": "closure"
+  },
+  "7147645": {
+   "skip": true,
+   "note": "same closure as ev9-cz-zeruvky-iii5709-2026 in manual.json (which has the signed detour)"
   }
  }
 }
