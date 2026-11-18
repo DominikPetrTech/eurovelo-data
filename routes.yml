@@ -42,7 +42,14 @@ routes:
   num: 14
   name: EuroVelo 14 · Waters of Central Europe
   osm: relation[route=bicycle][network=icn][ref="EV14"]
-  status: build
+  status: live
+  built:
+    date: '2026-11-18'
+    km: 1130
+    gaps: 6
+    gap_km: 20.0
+    turns: 2059
+    stages: 20
 - id: ev15
   kind: ev
   num: 15
