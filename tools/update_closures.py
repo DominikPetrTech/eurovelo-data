@@ -259,9 +259,29 @@ def scan_osm(routes, log):
 
 
 # ------------------------------------------------------------------ assemble
+def slice_geom(routes, it):
+    """Items given as two end points on one route ({"routes": ["ev6"], "slice": {"a": [lon, lat], "b": [lon, lat]}})
+    get the route line between the nearest points as their geometry."""
+    rid = (it.get("routes") or [None])[0]
+    rl = routes.get(rid)
+    if not rl:
+        return None
+    a, b = rl.nearest(it["slice"]["a"], 3000), rl.nearest(it["slice"]["b"], 3000)
+    if not a or not b:
+        return None
+    d0, d1 = sorted((a[1], b[1]))
+    n = max(2, int((d1 - d0) / 20) + 1)
+    return {"type": "LineString", "coordinates": [rl.point_at(d0 + (d1 - d0) * k / (n - 1)) for k in range(n)]}
+
+
 def place(routes, items, report):
     per = {rid: [] for rid in routes}
     for it in items:
+        if not it.get("geom") and it.get("slice"):
+            it["geom"] = slice_geom(routes, it)
+        if not it.get("geom"):
+            report.setdefault("not placed", [0, 0]); report["not placed"][0] += 1
+            continue
         if not active_soon(it.get("from"), it.get("to")):
             continue
         hits = match(routes, it["geom"], it.get("routes"))
