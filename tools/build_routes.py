@@ -47,8 +47,10 @@ def overpass(q, timeout=900):
             if r.status_code == 200:
                 return r.json()
             last = f"{url} {r.status_code}"
+            log(f"overpass {last}")
         except Exception as e:  # noqa: BLE001
             last = f"{url} {e}"
+            log(f"overpass {type(e).__name__}")
         time.sleep(30 * (attempt + 1))
     raise RuntimeError(f"overpass failed: {last}")
 
@@ -227,8 +229,17 @@ def elevation(line, length, step=250):
     return {"step": float(step), "data": "".join(out)}
 
 
+T0 = time.time()
+
+
+def log(msg):
+    print(f"[{time.time() - T0:7.1f}s] {msg}", flush=True)
+
+
 def build(entry):
+    log("overpass: fetching relation")
     rels, ways = fetch_relation(entry["osm"])
+    log(f"  {len(rels)} relations, {len(ways)} ways")
     if not ways:
         raise RuntimeError("relation has no ways")
     adj, edge_rel = build_graph(ways)
@@ -242,7 +253,9 @@ def build(entry):
             sizes[c] = sizes.get(c, 0) + 1
         big = max(sizes, key=sizes.get)
         adj = {u: {v: w for v, w in nb.items() if comp[v] == big} for u, nb in adj.items() if comp[u] == big}
+    log(f"graph: {len(adj)} nodes, {len(gap_edges) // 2} gap links")
     path = main_path(adj, entry.get("start"), entry.get("end"))
+    log(f"main path: {len(path)} nodes")
     # gaps along the path and the sub-relation (stage) of each step
     gaps_out, stages = [], []
     run = 0.0
@@ -272,7 +285,9 @@ def build(entry):
         st_out.append({"num": k + 1, "name": tg.get("name") or tg.get("ref") or entry["name"], "status": tg.get("state", ""),
                        "m": round(s["m0"] * length / max(run, 1)), "p": [round(s["p"][0], 5), round(s["p"][1], 5)]})
     gaps_pts = []
+    log(f"line {len(line)} pts, {length / 1000:.0f} km; turns…")
     turns = turns_by_window(line, gaps_pts)
+    log(f"{len(turns)} turns; elevation…")
     xs, ys = [p[0] for p in line], [p[1] for p in line]
     bundle = {
         "format": 2, "id": entry["id"], "name": entry["name"], "generated": time.strftime("%Y-%m-%d"),
@@ -377,10 +392,12 @@ def write_routes_json(cfg):
         for k in ("kind", "short", "long", "badge"):
             if e.get(k) is not None:
                 meta[k] = e[k]
+        log(f"routes.json: {rid} countries/places")
         meta["countries"] = countries_along(b, o)
         meta["places"] = places_along(b, o)
         routes.append(meta)
         lines[rid] = RouteLine(rid, b)
+    log("junctions…")
     path.write_text(json.dumps({"routes": routes, "junctions": junctions(lines)}, ensure_ascii=False, separators=(",", ":")))
     print(f"routes.json: {len(routes)} routes")
 
@@ -395,7 +412,7 @@ def main():
         try:
             b = build(e)
         except Exception as ex:  # noqa: BLE001
-            print(f"  FAILED: {ex}")
+            log(f"  FAILED: {ex}")
             e["status"] = "failed"; e["error"] = str(ex)[:300]
             changed = True
             continue

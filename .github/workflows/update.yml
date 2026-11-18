@@ -30,9 +30,13 @@ jobs:
         with: { python-version: "3.12" }
       - run: pip install requests pyproj shapely numpy scipy pyyaml
       - name: Build routes listed in routes.yml that have no bundle yet
+        timeout-minutes: 120
+        env: { PYTHONUNBUFFERED: "1" }
         run: python tools/build_routes.py
       - name: Update closures
+        timeout-minutes: 150
         env:
+          PYTHONUNBUFFERED: "1"
           JSDI_PROXY: https://www.nexisrail.cz/eurovelo/jsdi.php   # the JSDI feed refuses non-Czech IPs
         run: |
           if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.osm }}" = "true" ]; then
