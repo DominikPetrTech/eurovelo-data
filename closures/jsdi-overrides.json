@@ -5,37 +5,43 @@
    "title": {
     "cs": "Pomezí nad Ohří (Tůně), II/606: kyvadlový provoz se semafory",
     "en": "Pomezí nad Ohří (Tůně), II/606: one lane with traffic lights"
-   }
+   },
+   "kind": "caution"
   },
   "7347284": {
    "title": {
     "cs": "Králův Dvůr, Tovární: uzavřeno kvůli běžeckému závodu",
     "en": "Králův Dvůr, Tovární: closed for a running race"
-   }
+   },
+   "kind": "caution"
   },
   "7227463": {
    "title": {
     "cs": "Kutná Hora, Pobřežní: úplná uzavírka (stavba), bez objížďky",
     "en": "Kutná Hora, Pobřežní street: full closure (construction), no signed detour"
-   }
+   },
+   "kind": "closure"
   },
   "7043487": {
    "title": {
     "cs": "Brno-jih, cyklostezka u D1: pohyb stavebních vozidel, kyvadlově",
     "en": "Brno-jih, cycle path at the D1: construction traffic, alternating"
-   }
+   },
+   "kind": "caution"
   },
   "7154855": {
    "title": {
     "cs": "Křenovice, II/416: kyvadlový provoz se semafory",
     "en": "Křenovice, II/416: one lane with traffic lights"
-   }
+   },
+   "kind": "caution"
   },
   "7347357": {
    "title": {
     "cs": "Slavkov u Brna, Čs. armády: průjezdné jen jedním směrem (z centra)",
     "en": "Slavkov u Brna, Čs. armády: one-way only (out of the centre)"
-   }
+   },
+   "kind": "caution"
   },
   "7310438": {
    "title": {
@@ -55,7 +61,8 @@
      17.50188,
      49.2178
     ]
-   ]
+   ],
+   "kind": "closure"
   },
   "7315910": {
    "title": {
@@ -71,49 +78,57 @@
      18.33035,
      49.91157
     ]
-   ]
+   ],
+   "kind": "closure"
   },
   "7283884": {
    "title": {
     "cs": "Malé Březno, II/261: kyvadlový provoz (oprava vozovky)",
     "en": "Malé Březno, II/261: one lane, alternating (resurfacing)"
-   }
+   },
+   "kind": "caution"
   },
   "6533200": {
    "title": {
     "cs": "Ústí nad Labem-Střekov: cyklostezka pod mostem Dr. E. Beneše a Střekovské nábřeží uzavřeny",
     "en": "Ústí nad Labem-Střekov: cycle path under the Beneš bridge and Střekovské nábřeží closed"
-   }
+   },
+   "kind": "closure"
   },
   "7304191": {
    "title": {
     "cs": "Milešov, II/102: zúžení na jeden pruh",
     "en": "Milešov, II/102: narrowed to one lane"
-   }
+   },
+   "kind": "caution"
   },
   "7207956": {
    "title": {
     "cs": "Zvíkovské Podhradí: stavba kruhového objezdu, jeden pruh se semafory",
     "en": "Zvíkovské Podhradí: roundabout construction, one lane with lights"
-   }
+   },
+   "kind": "caution"
   },
   "7011399": {
    "title": {
     "cs": "Týn nad Vltavou: uzavřené ulice v centru (Děkanská, Pod Kostelem, nám. Míru), otevírá se postupně",
     "en": "Týn nad Vltavou: town-centre streets closed (Děkanská, Pod Kostelem, nám. Míru), reopening in stages"
-   }
+   },
+   "kind": "closure"
   },
   "6539610": {
    "title": {
     "cs": "České Budějovice: místní komunikace uzavřena (stavba Severní spojky)",
     "en": "České Budějovice: local road closed (Northern link road construction)"
-   }
+   },
+   "kind": "closure"
   },
   "7359411": {
    "title": {
     "cs": "České Budějovice: Night Run 17. 10., uzavřené ulice i cyklostezky",
     "en": "České Budějovice: Night Run on 17 Oct, streets and cycle paths closed"
-   }
+   },
+   "kind": "closure"
   },
   "7053336": {
    "title": {
@@ -133,13 +148,15 @@
      14.35133,
      48.8524
     ]
-   ]
+   ],
+   "kind": "closure"
   },
   "7349206": {
    "title": {
     "cs": "Český Krumlov, Za Tavírnou: úplná uzavírka (sítě)",
     "en": "Český Krumlov, Za Tavírnou: full closure (utility works)"
-   }
+   },
+   "kind": "closure"
   },
   "7192446": {
    "title": {
@@ -149,7 +166,8 @@
    "detour": {
     "cs": "Úřední objížďka: III/1572 (Přídolí).",
     "en": "Official detour: III/1572 (Přídolí)."
-   }
+   },
+   "kind": "closure"
   },
   "7236966": {
    "title": {
@@ -159,37 +177,43 @@
    "detour": {
     "cs": "Úřední objížďka pro cyklisty není uvedena; navigace vede po okolních silnicích.",
     "en": "No official cyclist detour given; navigation uses nearby roads."
-   }
+   },
+   "kind": "closure"
   },
   "7331312": {
    "title": {
     "cs": "Bílovice nad Svitavou, Fügnerovo nábřeží: kyvadlový provoz",
     "en": "Bílovice nad Svitavou, Fügnerovo nábřeží: one lane, alternating traffic"
-   }
+   },
+   "kind": "caution"
   },
   "7353114": {
    "title": {
     "cs": "Brno, Černovické nábřeží: ulice uzavřena pro auta, stezka podél Svitavy vede souběžně",
     "en": "Brno, Černovické nábřeží: street closed to cars, the Svitava path runs alongside"
-   }
+   },
+   "kind": "caution"
   },
   "7300955": {
    "title": {
     "cs": "Břeclav-Poštorná, ulice Julia Fučíka: úplná uzavírka (vodovod a kanalizace)",
     "en": "Břeclav-Poštorná, Julia Fučíka street: full closure (water and sewer works)"
-   }
+   },
+   "kind": "closure"
   },
   "7357599": {
    "title": {
     "cs": "Cheb, náměstí Krále Jiřího z Poděbrad: uzavřeno 28. 11. 12–22 h (vánoční trhy)",
     "en": "Cheb, main square: closed on 28 Nov, 12:00–22:00 (Christmas market)"
-   }
+   },
+   "kind": "caution"
   },
   "7199995": {
    "title": {
     "cs": "Rozvadov – Stará celnice, II/605: kyvadlový provoz",
     "en": "Rozvadov – Stará celnice, II/605: one lane, alternating"
-   }
+   },
+   "kind": "caution"
   },
   "7295668": {
    "title": {
@@ -199,7 +223,8 @@
    "detour": {
     "cs": "Úřední objížďka pro cyklisty: cyklotrasa 7 (Vltavská), 1024, 125 Zlatá stezka a 33 Šumavská.",
     "en": "Official cyclist detour: cycle routes 7 (Vltavská), 1024, 125 (Golden Trail) and 33 (Šumavská)."
-   }
+   },
+   "kind": "closure"
   },
   "7303929": {
    "title": {
@@ -209,7 +234,8 @@
    "detour": {
     "cs": "Úřední objížďka po místních komunikacích v Uherčicích.",
     "en": "Official detour on local streets in Uherčice."
-   }
+   },
+   "kind": "closure"
   }
  }
 }
