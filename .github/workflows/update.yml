@@ -30,7 +30,7 @@ jobs:
         with: { python-version: "3.12" }
       - run: pip install requests pyproj shapely numpy scipy pyyaml
       - name: Build routes listed in routes.yml that have no bundle yet
-        timeout-minutes: 120
+        timeout-minutes: 25
         env: { PYTHONUNBUFFERED: "1" }
         run: python tools/build_routes.py
       - name: Update closures

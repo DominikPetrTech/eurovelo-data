@@ -111,22 +111,27 @@ def components(adj):
 def link_pieces(adj, gaps):
     """Pieces of the relation that don't touch get joined by 'gap' edges between their loose ends."""
     comp, n = components(adj)
+    log(f"graph: {len(adj)} nodes in {n} pieces")
     if n == 1:
         return
     ends = [u for u in adj if len(adj[u]) == 1] or list(adj)
     pts = np.array([[u[0] * math.cos(math.radians(u[1])) * 111.32, u[1] * 110.54] for u in ends])  # km
     tree = cKDTree(pts)
-    pairs = tree.query_pairs(GAP_LINK_M / 1000)
+    k = min(16, len(ends))
+    dists, idxs = tree.query(pts, k=k, distance_upper_bound=GAP_LINK_M / 1000)
     best = {}
-    for i, j in pairs:
-        a, b = ends[i], ends[j]
-        ca, cb = comp[a], comp[b]
-        if ca == cb:
-            continue
-        k = (min(ca, cb), max(ca, cb))
-        d = hav(a, b)
-        if k not in best or d < best[k][0]:
-            best[k] = (d, a, b)
+    for i in range(len(ends)):
+        for dd, j in zip(np.atleast_1d(dists[i]), np.atleast_1d(idxs[i])):
+            if not np.isfinite(dd) or j >= len(ends) or j == i:
+                continue
+            a, b = ends[i], ends[j]
+            ca, cb = comp[a], comp[b]
+            if ca == cb:
+                continue
+            key_ = (min(ca, cb), max(ca, cb))
+            d = hav(a, b)
+            if key_ not in best or d < best[key_][0]:
+                best[key_] = (d, a, b)
     for d, a, b in best.values():
         adj[a][b] = (d * GAP_PENALTY, d)
         adj[b][a] = (d * GAP_PENALTY, d)
