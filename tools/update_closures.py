@@ -319,6 +319,8 @@ def main():
             over = json.loads((ROOT / "closures/jsdi-overrides.json").read_text())["items"]
             for it in jsdi:
                 it.update(over.get(it["id"][5:], {}))
+            # "skip": true in an override drops a JSDI event that doesn't affect cyclists on the route
+            jsdi = [it for it in jsdi if not it.get("skip")]
         except Exception as e:  # noqa: BLE001
             log.append(f"JSDI failed: {e}")
     prev = {}

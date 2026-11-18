@@ -1,5 +1,5 @@
 {
- "note": "Better wording, detours and signed-detour waypoints for events from the Czech JSDI feed, by JSDI id. Used while the event is in the feed.",
+ "note": "By JSDI id: better wording (title/detour), signed-detour waypoints (via), \"kind\" to force closure/caution, or \"skip\": true for an event that doesn't affect cyclists on the route. Used while the event is in the feed.",
  "items": {
   "7069372": {
    "title": {
