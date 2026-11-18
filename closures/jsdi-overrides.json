@@ -1,0 +1,215 @@
+{
+ "note": "Better wording, detours and signed-detour waypoints for events from the Czech JSDI feed, by JSDI id. Used while the event is in the feed.",
+ "items": {
+  "7069372": {
+   "title": {
+    "cs": "Pomezí nad Ohří (Tůně), II/606: kyvadlový provoz se semafory",
+    "en": "Pomezí nad Ohří (Tůně), II/606: one lane with traffic lights"
+   }
+  },
+  "7347284": {
+   "title": {
+    "cs": "Králův Dvůr, Tovární: uzavřeno kvůli běžeckému závodu",
+    "en": "Králův Dvůr, Tovární: closed for a running race"
+   }
+  },
+  "7227463": {
+   "title": {
+    "cs": "Kutná Hora, Pobřežní: úplná uzavírka (stavba), bez objížďky",
+    "en": "Kutná Hora, Pobřežní street: full closure (construction), no signed detour"
+   }
+  },
+  "7043487": {
+   "title": {
+    "cs": "Brno-jih, cyklostezka u D1: pohyb stavebních vozidel, kyvadlově",
+    "en": "Brno-jih, cycle path at the D1: construction traffic, alternating"
+   }
+  },
+  "7154855": {
+   "title": {
+    "cs": "Křenovice, II/416: kyvadlový provoz se semafory",
+    "en": "Křenovice, II/416: one lane with traffic lights"
+   }
+  },
+  "7347357": {
+   "title": {
+    "cs": "Slavkov u Brna, Čs. armády: průjezdné jen jedním směrem (z centra)",
+    "en": "Slavkov u Brna, Čs. armády: one-way only (out of the centre)"
+   }
+  },
+  "7310438": {
+   "title": {
+    "cs": "Otrokovice, ulice K. Čapka: úplná uzavírka (nové křižovatky)",
+    "en": "Otrokovice, K. Čapka street: full closure (new junctions)"
+   },
+   "detour": {
+    "cs": "Úřední objížďka: tř. Tomáše Bati (III/36746) a III/36745.",
+    "en": "Official detour: Tomáše Bati avenue (III/36746) and III/36745."
+   },
+   "via": [
+    [
+     17.51662,
+     49.21337
+    ],
+    [
+     17.50188,
+     49.2178
+    ]
+   ]
+  },
+  "7315910": {
+   "title": {
+    "cs": "Starý Bohumín: hraniční most přes Odru uzavřen (rekonstrukce)",
+    "en": "Starý Bohumín: border bridge over the Odra closed (reconstruction)"
+   },
+   "detour": {
+    "cs": "Přes Odru jinde, nejblíže Bohumín – Chałupki (silnice I/67 a 78).",
+    "en": "Cross the Odra elsewhere, nearest Bohumín – Chałupki (roads I/67 and 78)."
+   },
+   "via": [
+    [
+     18.33035,
+     49.91157
+    ]
+   ]
+  },
+  "7283884": {
+   "title": {
+    "cs": "Malé Březno, II/261: kyvadlový provoz (oprava vozovky)",
+    "en": "Malé Březno, II/261: one lane, alternating (resurfacing)"
+   }
+  },
+  "6533200": {
+   "title": {
+    "cs": "Ústí nad Labem-Střekov: cyklostezka pod mostem Dr. E. Beneše a Střekovské nábřeží uzavřeny",
+    "en": "Ústí nad Labem-Střekov: cycle path under the Beneš bridge and Střekovské nábřeží closed"
+   }
+  },
+  "7304191": {
+   "title": {
+    "cs": "Milešov, II/102: zúžení na jeden pruh",
+    "en": "Milešov, II/102: narrowed to one lane"
+   }
+  },
+  "7207956": {
+   "title": {
+    "cs": "Zvíkovské Podhradí: stavba kruhového objezdu, jeden pruh se semafory",
+    "en": "Zvíkovské Podhradí: roundabout construction, one lane with lights"
+   }
+  },
+  "7011399": {
+   "title": {
+    "cs": "Týn nad Vltavou: uzavřené ulice v centru (Děkanská, Pod Kostelem, nám. Míru), otevírá se postupně",
+    "en": "Týn nad Vltavou: town-centre streets closed (Děkanská, Pod Kostelem, nám. Míru), reopening in stages"
+   }
+  },
+  "6539610": {
+   "title": {
+    "cs": "České Budějovice: místní komunikace uzavřena (stavba Severní spojky)",
+    "en": "České Budějovice: local road closed (Northern link road construction)"
+   }
+  },
+  "7359411": {
+   "title": {
+    "cs": "České Budějovice: Night Run 17. 10., uzavřené ulice i cyklostezky",
+    "en": "České Budějovice: Night Run on 17 Oct, streets and cycle paths closed"
+   }
+  },
+  "7053336": {
+   "title": {
+    "cs": "Zlatá Koruna: silnice III/1596 uzavřena",
+    "en": "Zlatá Koruna: road III/1596 closed"
+   },
+   "detour": {
+    "cs": "Úřední objížďka: I/39 (Přísečná) a III/1439.",
+    "en": "Official detour: I/39 (Přísečná) and III/1439."
+   },
+   "via": [
+    [
+     14.36863,
+     48.84575
+    ],
+    [
+     14.35133,
+     48.8524
+    ]
+   ]
+  },
+  "7349206": {
+   "title": {
+    "cs": "Český Krumlov, Za Tavírnou: úplná uzavírka (sítě)",
+    "en": "Český Krumlov, Za Tavírnou: full closure (utility works)"
+   }
+  },
+  "7192446": {
+   "title": {
+    "cs": "Český Krumlov, Rožmberská (III/1571): úplná uzavírka (rekonstrukce)",
+    "en": "Český Krumlov, Rožmberská (III/1571): full closure (reconstruction)"
+   },
+   "detour": {
+    "cs": "Úřední objížďka: III/1572 (Přídolí).",
+    "en": "Official detour: III/1572 (Přídolí)."
+   }
+  },
+  "7236966": {
+   "title": {
+    "cs": "Horka nad Moravou – Křelov: uzavřená cyklostezka (rozšiřování)",
+    "en": "Horka nad Moravou – Křelov: cycle path closed (widening)"
+   },
+   "detour": {
+    "cs": "Úřední objížďka pro cyklisty není uvedena; navigace vede po okolních silnicích.",
+    "en": "No official cyclist detour given; navigation uses nearby roads."
+   }
+  },
+  "7331312": {
+   "title": {
+    "cs": "Bílovice nad Svitavou, Fügnerovo nábřeží: kyvadlový provoz",
+    "en": "Bílovice nad Svitavou, Fügnerovo nábřeží: one lane, alternating traffic"
+   }
+  },
+  "7353114": {
+   "title": {
+    "cs": "Brno, Černovické nábřeží: ulice uzavřena pro auta, stezka podél Svitavy vede souběžně",
+    "en": "Brno, Černovické nábřeží: street closed to cars, the Svitava path runs alongside"
+   }
+  },
+  "7300955": {
+   "title": {
+    "cs": "Břeclav-Poštorná, ulice Julia Fučíka: úplná uzavírka (vodovod a kanalizace)",
+    "en": "Břeclav-Poštorná, Julia Fučíka street: full closure (water and sewer works)"
+   }
+  },
+  "7357599": {
+   "title": {
+    "cs": "Cheb, náměstí Krále Jiřího z Poděbrad: uzavřeno 28. 11. 12–22 h (vánoční trhy)",
+    "en": "Cheb, main square: closed on 28 Nov, 12:00–22:00 (Christmas market)"
+   }
+  },
+  "7199995": {
+   "title": {
+    "cs": "Rozvadov – Stará celnice, II/605: kyvadlový provoz",
+    "en": "Rozvadov – Stará celnice, II/605: one lane, alternating"
+   }
+  },
+  "7295668": {
+   "title": {
+    "cs": "Stožec – Nové Údolí: Údolská cesta uzavřena pro cyklisty",
+    "en": "Stožec – Nové Údolí: Údolská cesta closed to cyclists"
+   },
+   "detour": {
+    "cs": "Úřední objížďka pro cyklisty: cyklotrasa 7 (Vltavská), 1024, 125 Zlatá stezka a 33 Šumavská.",
+    "en": "Official cyclist detour: cycle routes 7 (Vltavská), 1024, 125 (Golden Trail) and 33 (Šumavská)."
+   }
+  },
+  "7303929": {
+   "title": {
+    "cs": "Uherčice: silnice II/409 uzavřena 24. 10.",
+    "en": "Uherčice: road II/409 closed on 24 Oct"
+   },
+   "detour": {
+    "cs": "Úřední objížďka po místních komunikacích v Uherčicích.",
+    "en": "Official detour on local streets in Uherčice."
+   }
+  }
+ }
+}

@@ -1,0 +1,47 @@
+name: Update closures
+
+on:
+  schedule:
+    - cron: "17 3 * * 1"        # every Monday 03:17 UTC: full update (Czech JSDI + OpenStreetMap scan)
+  workflow_dispatch:
+    inputs:
+      osm:
+        description: "Run the slow OpenStreetMap scan too"
+        type: boolean
+        default: true
+  push:
+    branches: [main]
+    paths: ["closures/manual.json", "closures/jsdi-overrides.json", "data/**", "routes.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install requests pyproj shapely numpy scipy pyyaml
+      - name: Build routes listed in routes.yml that have no bundle yet
+        run: python tools/build_routes.py
+      - name: Update closures
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.osm }}" = "true" ]; then
+            python tools/update_closures.py
+          else
+            python tools/update_closures.py --no-osm
+          fi
+      - name: Commit
+        run: |
+          git config user.name "eurovelo-bot"
+          git config user.email "eurovelo-bot@users.noreply.github.com"
+          git add -A data closures routes.yml
+          git diff --cached --quiet || git commit -m "Data update $(date -u +%F)"
+          git push

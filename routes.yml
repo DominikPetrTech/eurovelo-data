@@ -1,0 +1,105 @@
+note: 'Routes in the app. status: live = in the app; build = the next GitHub run builds it from OpenStreetMap; planned = waiting in the queue (the weekly Claude task moves one to build each week); failed
+  = see error. Czech national routes (kind: cz) go after the EuroVelo queue; their numbers and OSM relations must be checked against the official list before they are added. Regional routes come last.'
+routes:
+- id: ev2
+  kind: ev
+  num: 2
+  name: EuroVelo 2 · Capitals Route
+  source: gpx
+  status: live
+- id: ev4
+  kind: ev
+  num: 4
+  name: EuroVelo 4 · Central Europe Route
+  source: gpx
+  status: live
+- id: ev6
+  kind: ev
+  num: 6
+  name: EuroVelo 6 · Rivers Route
+  source: gpx
+  status: live
+- id: ev7
+  kind: ev
+  num: 7
+  name: EuroVelo 7 · Sun Route
+  source: gpx
+  status: live
+- id: ev9
+  kind: ev
+  num: 9
+  name: EuroVelo 9 · Amber Route
+  source: gpx
+  status: live
+- id: ev13
+  kind: ev
+  num: 13
+  name: EuroVelo 13 · Iron Curtain Trail
+  source: gpx
+  status: live
+- id: ev14
+  kind: ev
+  num: 14
+  name: EuroVelo 14 · Waters of Central Europe
+  osm: relation[route=bicycle][network=icn][ref="EV14"]
+  status: planned
+- id: ev15
+  kind: ev
+  num: 15
+  name: EuroVelo 15 · Rhine Cycle Route
+  osm: relation[route=bicycle][network=icn][ref="EV15"]
+  status: planned
+- id: ev11
+  kind: ev
+  num: 11
+  name: EuroVelo 11 · East Europe Route
+  osm: relation[route=bicycle][network=icn][ref="EV11"]
+  status: planned
+- id: ev5
+  kind: ev
+  num: 5
+  name: EuroVelo 5 · Via Romea Francigena
+  osm: relation[route=bicycle][network=icn][ref="EV5"]
+  status: planned
+- id: ev10
+  kind: ev
+  num: 10
+  name: EuroVelo 10 · Baltic Sea Cycle Route
+  osm: relation[route=bicycle][network=icn][ref="EV10"]
+  status: planned
+- id: ev17
+  kind: ev
+  num: 17
+  name: EuroVelo 17 · Rhone Cycle Route
+  osm: relation[route=bicycle][network=icn][ref="EV17"]
+  status: planned
+- id: ev12
+  kind: ev
+  num: 12
+  name: EuroVelo 12 · North Sea Cycle Route
+  osm: relation[route=bicycle][network=icn][ref="EV12"]
+  status: planned
+- id: ev3
+  kind: ev
+  num: 3
+  name: EuroVelo 3 · Pilgrims Route
+  osm: relation[route=bicycle][network=icn][ref="EV3"]
+  status: planned
+- id: ev8
+  kind: ev
+  num: 8
+  name: EuroVelo 8 · Mediterranean Route
+  osm: relation[route=bicycle][network=icn][ref="EV8"]
+  status: planned
+- id: ev19
+  kind: ev
+  num: 19
+  name: EuroVelo 19 · Meuse Cycle Route
+  osm: relation[route=bicycle][network=icn][ref="EV19"]
+  status: planned
+- id: ev1
+  kind: ev
+  num: 1
+  name: EuroVelo 1 · Atlantic Coast Route
+  osm: relation[route=bicycle][network=icn][ref="EV1"]
+  status: planned
