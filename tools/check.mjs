@@ -12,6 +12,8 @@ const net = JSON.parse(readFileSync(ROOT + "data/routes.json"));
 const only = process.argv.slice(2);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const issues = [], rows = [];
+let known = []; try { known = JSON.parse(readFileSync(ROOT + "closures/known-gaps.json")).items; } catch {}
+const isKnownGap = (rid, g) => known.some((k) => k.route === rid && (haversine(k.near, g.a) < 3000 || haversine(k.near, g.b) < 3000));
 const flag = (sev, route, what, detail) => issues.push({ sev, route, what, detail });
 
 // Valhalla's public server asks for moderate use: one request at a time, a pause between.
@@ -27,9 +29,10 @@ for (const meta of net.routes) {
   const km = r.ev.length / 1000;
 
   // ---- the route itself
-  const gapKm = (r.gaps || []).reduce((s, g) => s + Math.max(0, g.f1 - g.f0), 0) / 1000;
+  const realGaps = (r.gaps || []).filter((g) => !isKnownGap(meta.id, g));
+  const gapKm = realGaps.reduce((s, g) => s + Math.max(0, g.f1 - g.f0), 0) / 1000;
   if (gapKm > km * 0.05) flag("high", meta.id, "route gaps", `${gapKm.toFixed(1)} km of ${km.toFixed(0)} km has no route data`);
-  for (const g of r.gaps || []) if (g.f1 - g.f0 > 10000) flag("medium", meta.id, "long gap", `${((g.f1 - g.f0) / 1000).toFixed(1)} km at ${g.a.map((v) => v.toFixed(4)).join(",")}`);
+  for (const g of realGaps) if (g.f1 - g.f0 > 10000) flag("medium", meta.id, "long gap", `${((g.f1 - g.f0) / 1000).toFixed(1)} km at ${g.a.map((v) => v.toFixed(4)).join(",")}`);
   const perKm = (b.turns || []).length / km;
   if (perKm > 4) flag("medium", meta.id, "too many turns", `${perKm.toFixed(1)} per km (zigzag data?)`);
   // a line that runs back over itself (lost GPX order, duplicated stage)

@@ -1,0 +1,9 @@
+{"note": "Gaps in the route line that are real crossings (ferry, train), not missing data. The sanity check ignores them. Match by route and a point within 3 km of the gap start or end.",
+ "items": [
+  {"route": "ev2", "near": [-6.2445, 53.3565], "what": "ferry Dublin – Holyhead"},
+  {"route": "ev2", "near": [1.2865, 51.9481], "what": "ferry Harwich – Hook of Holland"},
+  {"route": "ev7", "near": [11.9246, 54.5744], "what": "ferry Gedser – Rostock"},
+  {"route": "ev7", "near": [13.1295, 47.0812], "what": "Tauern railway car-train Böckstein – Mallnitz"},
+  {"route": "ev7", "near": [15.6449, 38.1114], "what": "ferry across the Strait of Messina"},
+  {"route": "ev13", "near": [23.4230, 58.9064], "what": "ferry Rohuküla – Heltermaa (Hiiumaa)"}
+ ]}
