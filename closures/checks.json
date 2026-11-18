@@ -2,6 +2,18 @@
  "date": "2026-11-18",
  "issues": [
   {
+   "sev": "high",
+   "route": "ev2",
+   "what": "route gaps",
+   "detail": "307.4 km of 5118 km has no route data"
+  },
+  {
+   "sev": "medium",
+   "route": "ev13",
+   "what": "long gap",
+   "detail": "37.2 km at 23.4230,58.9064"
+  },
+  {
    "sev": "medium",
    "route": "ev14",
    "what": "long gap",
@@ -9,18 +21,185 @@
   },
   {
    "sev": "medium",
-   "route": "ev9",
-   "what": "detour through closure",
-   "detail": "ev9-cz-zeruvky-iii5709-2026 detour passes jsdi-7147645"
+   "route": "ev2",
+   "what": "long gap",
+   "detail": "107.4 km at -6.2445,53.3565"
+  },
+  {
+   "sev": "medium",
+   "route": "ev2",
+   "what": "long gap",
+   "detail": "194.5 km at 1.2865,51.9481"
+  },
+  {
+   "sev": "medium",
+   "route": "ev7",
+   "what": "long gap",
+   "detail": "48.4 km at 11.9246,54.5744"
+  },
+  {
+   "sev": "medium",
+   "route": "ev7",
+   "what": "long gap",
+   "detail": "11.6 km at 13.1295,47.0812"
+  },
+  {
+   "sev": "medium",
+   "route": "ev7",
+   "what": "long gap",
+   "detail": "29.5 km at 15.6449,38.1114"
   },
   {
    "sev": "low",
-   "route": "ev9",
+   "route": "ev4",
    "what": "duplicate?",
-   "detail": "jsdi-7147645 overlaps ev9-cz-zeruvky-iii5709-2026"
+   "detail": "jsdi-7396338 overlaps jsdi-7396339"
   }
  ],
  "detours": [
+  {
+   "route": "ev4",
+   "id": "jsdi-7227463",
+   "closed": 190,
+   "detour": 285,
+   "plan": 6079,
+   "ratio": 0.98,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev4",
+   "id": "jsdi-7396339",
+   "closed": 131,
+   "detour": 3366,
+   "plan": 6067,
+   "ratio": 0.99,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev4",
+   "id": "jsdi-7402250",
+   "closed": 114,
+   "detour": 1945,
+   "plan": 6789,
+   "ratio": 1.11,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev4",
+   "id": "jsdi-7315910",
+   "closed": 35,
+   "detour": 164,
+   "plan": 6035,
+   "ratio": 1,
+   "signed": true,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev6",
+   "id": "ev6-fr-chalonnes-margerie-2026",
+   "closed": 2876,
+   "detour": 4801,
+   "plan": 10180,
+   "ratio": 1.15,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev6",
+   "id": "ev6-fr-vineuil-passerelle-2026",
+   "closed": 1870,
+   "detour": 3732,
+   "plan": 8912,
+   "ratio": 1.13,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev6",
+   "id": "ev6-fr-besancon-rivotte-malate-2026",
+   "closed": 2628,
+   "detour": 7454,
+   "plan": 12726,
+   "ratio": 1.47,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev6",
+   "id": "ev6-de-passau-kachlet-2026",
+   "closed": 452,
+   "detour": 1338,
+   "plan": 7069,
+   "ratio": 1.1,
+   "signed": true,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev6",
+   "id": "ev6-at-korneuburg-werft-2026",
+   "closed": 676,
+   "detour": 3610,
+   "plan": 9040,
+   "ratio": 1.35,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev7",
+   "id": "ev7-de-radebeul-altserkowitz-2026",
+   "closed": 1352,
+   "detour": 3827,
+   "plan": 8471,
+   "ratio": 1.15,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev7",
+   "id": "jsdi-6533200",
+   "closed": 289,
+   "detour": 1267,
+   "plan": 6398,
+   "ratio": 1.02,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev7",
+   "id": "jsdi-7011399",
+   "closed": 352,
+   "detour": 683,
+   "plan": 6139,
+   "ratio": 0.97,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev7",
+   "id": "jsdi-7053336",
+   "closed": 606,
+   "detour": 630,
+   "plan": 6534,
+   "ratio": 0.99,
+   "signed": true,
+   "failed": 0,
+   "straightLine": false
+  },
   {
    "route": "ev9",
    "id": "ev9-pl-glucholazy-river-2026",
@@ -100,17 +279,6 @@
   },
   {
    "route": "ev9",
-   "id": "jsdi-7147645",
-   "closed": 820,
-   "detour": 2785,
-   "plan": 7709,
-   "ratio": 1.13,
-   "signed": true,
-   "failed": 0,
-   "straightLine": false
-  },
-  {
-   "route": "ev9",
    "id": "ev9-cz-blucina-dunavka-2026",
    "closed": 701,
    "detour": 5295,
@@ -127,6 +295,28 @@
    "detour": 985,
    "plan": 6873,
    "ratio": 1.02,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev13",
+   "id": "jsdi-7370154",
+   "closed": 204,
+   "detour": 6794,
+   "plan": 10790,
+   "ratio": 1.74,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev13",
+   "id": "jsdi-7381154",
+   "closed": 88,
+   "detour": 388,
+   "plan": 6305,
+   "ratio": 1.04,
    "signed": false,
    "failed": 0,
    "straightLine": false
