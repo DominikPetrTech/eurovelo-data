@@ -310,29 +310,19 @@ def build(entry):
 
 # ------------------------------------------------------------------ routes.json
 def places_along(bundle, old):
+    """Towns and cities within 3 km of the route, in route order (one Overpass request over the route's bbox)."""
     if old and old.get("places"):
         return old["places"]
-    line = decode(bundle["line"])
-    out, seen = [], set()
     rl = RouteLine(bundle["id"], bundle)
-    step = 60000
-    d = 0.0
-    while d < rl.length:
-        seg = [rl.point_at(x) for x in np.linspace(d, min(rl.length, d + step), 40)]
-        xs, ys = [p[0] for p in seg], [p[1] for p in seg]
-        bb = f"{min(ys) - 0.03:.4f},{min(xs) - 0.04:.4f},{max(ys) + 0.03:.4f},{max(xs) + 0.04:.4f}"
-        try:
-            j = overpass(f'[out:json][timeout:120];node[place~"^(city|town)$"][name]({bb});out;', timeout=200)
-        except RuntimeError:
-            j = {"elements": []}
-        for e in j["elements"]:
-            p = [e["lon"], e["lat"]]
-            n = rl.nearest(p, 3000)
-            nm = e["tags"].get("name")
-            if n and nm not in seen:
-                seen.add(nm); out.append((n[1], [nm, round(p[0], 5), round(p[1], 5)]))
-        d += step
-        time.sleep(2)
+    x0, y0, x1, y1 = bundle["bbox"]
+    j = overpass(f'[out:json][timeout:300];node[place~"^(city|town)$"][name]({y0 - 0.05:.4f},{x0 - 0.05:.4f},{y1 + 0.05:.4f},{x1 + 0.05:.4f});out;', timeout=400)
+    out, seen = [], set()
+    for e in j["elements"]:
+        p = [e["lon"], e["lat"]]
+        n = rl.nearest(p, 3000)
+        nm = e["tags"].get("name")
+        if n and nm not in seen:
+            seen.add(nm); out.append((n[1], [nm, round(p[0], 5), round(p[1], 5)]))
     return [x for _, x in sorted(out)]
 
 
