@@ -32,6 +32,8 @@ jobs:
       - name: Build routes listed in routes.yml that have no bundle yet
         run: python tools/build_routes.py
       - name: Update closures
+        env:
+          JSDI_PROXY: https://www.nexisrail.cz/eurovelo/jsdi.php   # the JSDI feed refuses non-Czech IPs
         run: |
           if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.osm }}" = "true" ]; then
             python tools/update_closures.py
