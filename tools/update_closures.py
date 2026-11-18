@@ -13,6 +13,7 @@ Writes closures/<route>.json (what the app loads) and closures/report.md.
 import argparse
 import datetime as dt
 import json
+import os
 import re
 import sys
 import time
@@ -127,14 +128,24 @@ def short(desc, n=140):
     return d if len(d) <= n else d[: n - 1].rsplit(" ", 1)[0] + "…"
 
 
+# VARS keys of the 14 regions (from api-mov.dopravniinfo.cz/config/web, which isn't always reachable)
+REGIONS = {"Hlavní město Praha": "19", "Jihočeský kraj": "35", "Jihomoravský kraj": "116", "Karlovarský kraj": "51",
+           "Kraj Vysočina": "108", "Královéhradecký kraj": "86", "Liberecký kraj": "78", "Moravskoslezský kraj": "132",
+           "Olomoucký kraj": "124", "Pardubický kraj": "94", "Plzeňský kraj": "43", "Středočeský kraj": "27",
+           "Ústecký kraj": "60", "Zlínský kraj": "141"}
+# The feed may refuse foreign IPs (GitHub runners); JSDI_PROXY points at a small relay on a Czech host.
+JSDI_PROXY = os.environ.get("JSDI_PROXY", "")
+
+
 def fetch_jsdi(log):
-    cfg = requests.get(JSDI_CFG, headers=UA, timeout=60).json()
     tr = jtsk_to_wgs()
     events = {}
-    for reg in cfg["regions"].values():
+    for name, key in REGIONS.items():
+        reg = {"name": name, "VARS_key": key}
         for attempt in range(3):
             try:
-                j = requests.get(JSDI_REGION.format(reg["VARS_key"]), headers=UA, timeout=120).json()
+                url = (JSDI_PROXY + "?region=" + reg["VARS_key"]) if JSDI_PROXY else JSDI_REGION.format(reg["VARS_key"])
+                j = requests.get(url, headers=UA, timeout=120).json()
                 break
             except Exception as e:  # noqa: BLE001
                 log.append(f"JSDI {reg['name']}: {e}"); time.sleep(10)
