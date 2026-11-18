@@ -30,6 +30,7 @@ jobs:
         with: { python-version: "3.12" }
       - run: pip install requests pyproj shapely numpy scipy pyyaml
       - name: Build routes listed in routes.yml that have no bundle yet
+        continue-on-error: true
         timeout-minutes: 120
         env: { PYTHONUNBUFFERED: "1" }
         run: python tools/build_routes.py
@@ -45,6 +46,7 @@ jobs:
             python tools/update_closures.py --no-osm
           fi
       - name: Commit
+        if: always()
         run: |
           git config user.name "eurovelo-bot"
           git config user.email "eurovelo-bot@users.noreply.github.com"

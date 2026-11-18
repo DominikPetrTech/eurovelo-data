@@ -388,8 +388,14 @@ def write_routes_json(cfg):
             if e.get(k) is not None:
                 meta[k] = e[k]
         log(f"routes.json: {rid} countries/places")
-        meta["countries"] = countries_along(b, o)
-        meta["places"] = places_along(b, o)
+        try:
+            meta["countries"] = countries_along(b, o)
+        except Exception as ex:  # noqa: BLE001
+            log(f"  countries skipped: {ex}"); meta.setdefault("countries", [])
+        try:
+            meta["places"] = places_along(b, o)
+        except Exception as ex:  # noqa: BLE001 - towns for search are nice to have; retried next run
+            log(f"  places skipped: {ex}"); meta.setdefault("places", [])
         routes.append(meta)
         lines[rid] = RouteLine(rid, b)
     log("junctions…")
