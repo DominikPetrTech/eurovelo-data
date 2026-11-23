@@ -28,17 +28,6 @@
   },
   {
    "route": "ev4",
-   "id": "jsdi-7416888",
-   "closed": 9,
-   "detour": 130,
-   "plan": 6009,
-   "ratio": 1,
-   "signed": false,
-   "failed": 0,
-   "straightLine": false
-  },
-  {
-   "route": "ev4",
    "id": "jsdi-7402250",
    "closed": 114,
    "detour": 1945,
