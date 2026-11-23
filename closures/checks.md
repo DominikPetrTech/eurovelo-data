@@ -1,21 +1,20 @@
 # Sanity check 2026-11-23
 
-5 findings (0 high).
+2 findings (0 high).
 
 | severity | route | what | detail |
 |---|---|---|---|
 | medium | ev14 | long gap | 19.0 km at 19.3496,47.5964 |
-| low | ev4 | expired item | jsdi-7396339 ended 2026-11-18 |
-| low | ev4 | duplicate? | jsdi-7396338 overlaps jsdi-7396339 |
-| low | ev4 | expired item | jsdi-7410337 ended 2026-11-19 |
-| low | ev4 | expired item | jsdi-7410337 ended 2026-11-19 |
+| low | ev7 | duplicate? | jsdi-7413244 overlaps jsdi-7053336 |
 
 ## Detours ridden
 
 | route | closure | closed m | detour m | trip m | ×straight | signed |
 |---|---|---|---|---|---|---|
 | ev4 | jsdi-7227463 | 190 | 285 | 6079 | 0.98 |  |
+| ev4 | jsdi-7416888 | 9 | 130 | 6009 | 1 |  |
 | ev4 | jsdi-7402250 | 114 | 1945 | 6789 | 1.11 |  |
+| ev4 | jsdi-7310439 | 37 | 939 | 6053 | 1 |  |
 | ev4 | jsdi-7315910 | 35 | 164 | 6035 | 1 | yes |
 | ev6 | ev6-fr-chalonnes-margerie-2026 | 2876 | 4801 | 10180 | 1.15 |  |
 | ev6 | ev6-fr-vineuil-passerelle-2026 | 1870 | 3732 | 8912 | 1.13 |  |
@@ -31,6 +30,7 @@
 | ev9 | ev9-cz-mikulovice-nabrezni-gap | 206 | 2924 | 6166 | 0.99 |  |
 | ev9 | ev9-cz-mikulovice-bela-path2-2026 | 430 | 2924 | 6390 | 0.99 |  |
 | ev9 | ev9-cz-pisecna-mk-2026 | 627 | 1797 | 6613 | 1 |  |
+| ev9 | jsdi-7411559 | 10 | 441 | 6197 | 1.03 |  |
 | ev9 | jsdi-7236966 | 1395 | 5961 | 10736 | 1.45 |  |
 | ev9 | ev9-cz-zeruvky-iii5709-2026 | 815 | 2785 | 7704 | 1.13 | yes |
 | ev9 | ev9-cz-blucina-dunavka-2026 | 701 | 5295 | 7480 | 1.12 |  |

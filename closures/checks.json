@@ -9,27 +9,9 @@
   },
   {
    "sev": "low",
-   "route": "ev4",
-   "what": "expired item",
-   "detail": "jsdi-7396339 ended 2026-11-18"
-  },
-  {
-   "sev": "low",
-   "route": "ev4",
+   "route": "ev7",
    "what": "duplicate?",
-   "detail": "jsdi-7396338 overlaps jsdi-7396339"
-  },
-  {
-   "sev": "low",
-   "route": "ev4",
-   "what": "expired item",
-   "detail": "jsdi-7410337 ended 2026-11-19"
-  },
-  {
-   "sev": "low",
-   "route": "ev4",
-   "what": "expired item",
-   "detail": "jsdi-7410337 ended 2026-11-19"
+   "detail": "jsdi-7413244 overlaps jsdi-7053336"
   }
  ],
  "detours": [
@@ -46,11 +28,33 @@
   },
   {
    "route": "ev4",
+   "id": "jsdi-7416888",
+   "closed": 9,
+   "detour": 130,
+   "plan": 6009,
+   "ratio": 1,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev4",
    "id": "jsdi-7402250",
    "closed": 114,
    "detour": 1945,
    "plan": 6789,
    "ratio": 1.11,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev4",
+   "id": "jsdi-7310439",
+   "closed": 37,
+   "detour": 939,
+   "plan": 6053,
+   "ratio": 1,
    "signed": false,
    "failed": 0,
    "straightLine": false
@@ -216,6 +220,17 @@
    "detour": 1797,
    "plan": 6613,
    "ratio": 1,
+   "signed": false,
+   "failed": 0,
+   "straightLine": false
+  },
+  {
+   "route": "ev9",
+   "id": "jsdi-7411559",
+   "closed": 10,
+   "detour": 441,
+   "plan": 6197,
+   "ratio": 1.03,
    "signed": false,
    "failed": 0,
    "straightLine": false
