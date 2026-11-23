@@ -1,25 +1,20 @@
-# Sanity check 2026-11-18
+# Sanity check 2026-11-23
 
-9 findings (1 high).
+5 findings (0 high).
 
 | severity | route | what | detail |
 |---|---|---|---|
-| high | ev2 | route gaps | 307.4 km of 5118 km has no route data |
-| medium | ev13 | long gap | 37.2 km at 23.4230,58.9064 |
 | medium | ev14 | long gap | 19.0 km at 19.3496,47.5964 |
-| medium | ev2 | long gap | 107.4 km at -6.2445,53.3565 |
-| medium | ev2 | long gap | 194.5 km at 1.2865,51.9481 |
-| medium | ev7 | long gap | 48.4 km at 11.9246,54.5744 |
-| medium | ev7 | long gap | 11.6 km at 13.1295,47.0812 |
-| medium | ev7 | long gap | 29.5 km at 15.6449,38.1114 |
+| low | ev4 | expired item | jsdi-7396339 ended 2026-11-18 |
 | low | ev4 | duplicate? | jsdi-7396338 overlaps jsdi-7396339 |
+| low | ev4 | expired item | jsdi-7410337 ended 2026-11-19 |
+| low | ev4 | expired item | jsdi-7410337 ended 2026-11-19 |
 
 ## Detours ridden
 
 | route | closure | closed m | detour m | trip m | ×straight | signed |
 |---|---|---|---|---|---|---|
 | ev4 | jsdi-7227463 | 190 | 285 | 6079 | 0.98 |  |
-| ev4 | jsdi-7396339 | 131 | 3366 | 6067 | 0.99 |  |
 | ev4 | jsdi-7402250 | 114 | 1945 | 6789 | 1.11 |  |
 | ev4 | jsdi-7315910 | 35 | 164 | 6035 | 1 | yes |
 | ev6 | ev6-fr-chalonnes-margerie-2026 | 2876 | 4801 | 10180 | 1.15 |  |

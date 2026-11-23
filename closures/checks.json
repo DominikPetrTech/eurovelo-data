@@ -1,18 +1,6 @@
 {
- "date": "2026-11-18",
+ "date": "2026-11-23",
  "issues": [
-  {
-   "sev": "high",
-   "route": "ev2",
-   "what": "route gaps",
-   "detail": "307.4 km of 5118 km has no route data"
-  },
-  {
-   "sev": "medium",
-   "route": "ev13",
-   "what": "long gap",
-   "detail": "37.2 km at 23.4230,58.9064"
-  },
   {
    "sev": "medium",
    "route": "ev14",
@@ -20,40 +8,28 @@
    "detail": "19.0 km at 19.3496,47.5964"
   },
   {
-   "sev": "medium",
-   "route": "ev2",
-   "what": "long gap",
-   "detail": "107.4 km at -6.2445,53.3565"
-  },
-  {
-   "sev": "medium",
-   "route": "ev2",
-   "what": "long gap",
-   "detail": "194.5 km at 1.2865,51.9481"
-  },
-  {
-   "sev": "medium",
-   "route": "ev7",
-   "what": "long gap",
-   "detail": "48.4 km at 11.9246,54.5744"
-  },
-  {
-   "sev": "medium",
-   "route": "ev7",
-   "what": "long gap",
-   "detail": "11.6 km at 13.1295,47.0812"
-  },
-  {
-   "sev": "medium",
-   "route": "ev7",
-   "what": "long gap",
-   "detail": "29.5 km at 15.6449,38.1114"
+   "sev": "low",
+   "route": "ev4",
+   "what": "expired item",
+   "detail": "jsdi-7396339 ended 2026-11-18"
   },
   {
    "sev": "low",
    "route": "ev4",
    "what": "duplicate?",
    "detail": "jsdi-7396338 overlaps jsdi-7396339"
+  },
+  {
+   "sev": "low",
+   "route": "ev4",
+   "what": "expired item",
+   "detail": "jsdi-7410337 ended 2026-11-19"
+  },
+  {
+   "sev": "low",
+   "route": "ev4",
+   "what": "expired item",
+   "detail": "jsdi-7410337 ended 2026-11-19"
   }
  ],
  "detours": [
@@ -64,17 +40,6 @@
    "detour": 285,
    "plan": 6079,
    "ratio": 0.98,
-   "signed": false,
-   "failed": 0,
-   "straightLine": false
-  },
-  {
-   "route": "ev4",
-   "id": "jsdi-7396339",
-   "closed": 131,
-   "detour": 3366,
-   "plan": 6067,
-   "ratio": 0.99,
    "signed": false,
    "failed": 0,
    "straightLine": false

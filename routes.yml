@@ -55,7 +55,14 @@ routes:
   num: 15
   name: EuroVelo 15 · Rhine Cycle Route
   osm: relation[route=bicycle][network=icn][ref="EV15"]
-  status: build
+  status: live
+  built:
+    date: '2026-11-23'
+    km: 1456
+    gaps: 1
+    gap_km: 0.6
+    turns: 2634
+    stages: 24
 - id: ev11
   kind: ev
   num: 11
