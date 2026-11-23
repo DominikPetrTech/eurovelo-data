@@ -28,6 +28,14 @@ ROOT = Path(__file__).resolve().parents[1]
 UA = {"User-Agent": "EuroVeloNav-by-NEXIS-Rail/1.0 (closures update; d.petr@nexisrail.cz)"}
 AHEAD_DAYS = 90          # include closures that start within this many days
 TODAY = dt.date.today()
+T0 = time.time()
+# The workflow step has 150 min; the OSM scan stops at this point (minutes since start) and keeps
+# last week's OSM items for the routes it didn't finish, so the closures always get written.
+OSM_BUDGET_MIN = float(os.environ.get("OSM_BUDGET_MIN", "105"))
+
+
+def say(msg):
+    print(f"[{time.time() - T0:7.0f}s] {msg}", flush=True)
 
 
 def iso(d):
@@ -145,7 +153,7 @@ def fetch_jsdi(log):
         for attempt in range(3):
             try:
                 url = (JSDI_PROXY + "?region=" + reg["VARS_key"]) if JSDI_PROXY else JSDI_REGION.format(reg["VARS_key"])
-                j = requests.get(url, headers=UA, timeout=120).json()
+                j = requests.get(url, headers=UA, timeout=(20, 90)).json()
                 break
             except Exception as e:  # noqa: BLE001
                 log.append(f"JSDI {reg['name']}: {e}"); time.sleep(10)
@@ -156,6 +164,7 @@ def fetch_jsdi(log):
             if icon.replace("p_", "") not in KEEP_ICONS:
                 continue
             events[ev["Id"]] = (ev, icon)
+        say(f"JSDI {name}: {len(j.get('Information', []))} events")
         time.sleep(1)
     out = []
     for eid, (ev, icon) in events.items():
@@ -188,11 +197,11 @@ OSM_Q = ('[out:json][timeout:120][bbox:{bb}];(way[highway=construction];way[high
          'way[highway]["access:conditional"~"^no ?@ ?\\\\(?sunset-sunrise"];);out geom tags;')
 
 
-def overpass(q, log):
-    for attempt in range(6):
+def overpass(q, log, tries=6, timeout=180):
+    for attempt in range(tries):
         url = OVERPASS[attempt % len(OVERPASS)]
         try:
-            r = requests.post(url, data={"data": q}, headers=UA, timeout=180)
+            r = requests.post(url, data={"data": q}, headers=UA, timeout=timeout)
             if r.status_code == 200:
                 j = r.json()
                 if not re.search(r"runtime error|timed out|out of memory", j.get("remark", "") or "", re.I):
@@ -200,7 +209,8 @@ def overpass(q, log):
             log.append(f"overpass {url.split('/')[2]} {r.status_code}")
         except Exception as e:  # noqa: BLE001
             log.append(f"overpass {url.split('/')[2]} {type(e).__name__}")
-        time.sleep(15 * (attempt + 1))
+        if attempt < tries - 1:
+            time.sleep(15 * (attempt + 1))
     return None
 
 
@@ -217,13 +227,25 @@ def boxes(rl, step=60000, pad=0.003):
 
 
 def scan_osm(routes, log):
-    found = {}
-    for rid, rl in routes.items():
-        for bb in boxes(rl):
-            j = overpass(OSM_Q.format(bb=",".join(f"{v:.4f}" for v in bb)), log)
+    """Returns (items, ids of routes scanned completely). Routes are taken in an order that rotates
+    every week, so when the time budget runs out it's a different route that waits for next week."""
+    found, done = {}, set()
+    ids = list(routes)
+    k = TODAY.isocalendar()[1] % len(ids) if ids else 0
+    for rid in ids[k:] + ids[:k]:
+        rl = routes[rid]
+        bxs, ok = boxes(rl), True
+        for n, bb in enumerate(bxs):
+            if time.time() - T0 > OSM_BUDGET_MIN * 60:
+                log.append(f"OSM scan stopped at the {OSM_BUDGET_MIN:.0f} min budget on {rid} ({n}/{len(bxs)} boxes); "
+                           "last week's OSM items kept for unfinished routes")
+                say(log[-1])
+                return osm_items(found), done
+            j = overpass(OSM_Q.format(bb=",".join(f"{v:.4f}" for v in bb)), log, tries=3, timeout=150)
             time.sleep(2)
             if not j:
                 log.append(f"OSM box skipped on {rid}: {bb}")
+                ok = False
                 continue
             for w in j.get("elements", []):
                 if w.get("type") != "way" or not w.get("geometry"):
@@ -237,6 +259,13 @@ def scan_osm(routes, log):
                     continue
                 geom = {"type": "LineString", "coordinates": [[round(p["lon"], 6), round(p["lat"], 6)] for p in w["geometry"]]}
                 found[w["id"]] = (geom, tags, night)
+        if ok:
+            done.add(rid)
+        say(f"OSM {rid}: {len(bxs)} boxes{'' if ok else ' (some skipped)'}, {len(found)} ways so far")
+    return osm_items(found), done
+
+
+def osm_items(found):
     out = []
     for wid, (geom, tags, night) in found.items():
         L = round(geom_length(geom) / 10) * 10
@@ -313,6 +342,7 @@ def main():
     for it in manual:
         it.setdefault("src", "manual")
     jsdi = []
+    say(f"{len(routes)} routes, {len(manual)} manual items")
     if not a.no_jsdi:
         try:
             jsdi = fetch_jsdi(log)
@@ -340,7 +370,15 @@ def main():
     else:
         osm = []
     if not a.no_osm:
-        osm = scan_osm(routes, log)
+        scanned, done = scan_osm(routes, log)
+        osm += scanned    # (plus last week's JSDI items with --no-jsdi)
+        have = {it["id"] for it in osm}
+        for rid, doc in prev.items():   # unfinished routes keep last week's OSM items
+            if rid in done:
+                continue
+            for c in doc.get("closures", []):
+                if c["id"].startswith("osm-") and c["id"] not in have:
+                    osm.append({**c, "src": "previous run"}); have.add(c["id"])
     per = place(routes, manual + jsdi + osm, report)
     lines = [f"# Closures update {TODAY.isoformat()}", "", "| source | items | on a route |", "|---|---|---|"]
     lines += [f"| {k} | {v[0]} | {v[1]} |" for k, v in report.items()]
