@@ -55,7 +55,7 @@ routes:
   num: 15
   name: EuroVelo 15 · Rhine Cycle Route
   osm: relation[route=bicycle][network=icn][ref="EV15"]
-  status: planned
+  status: build
 - id: ev11
   kind: ev
   num: 11
