@@ -9,7 +9,7 @@ and `closures/<route>.json` from here and falls back to the copy it ships with.
 | what | how | when |
 |---|---|---|
 | Czech closures | `tools/update_closures.py` reads the official JSDI feed (dopravniinfo.cz, all 14 regions) | every Monday, GitHub Actions |
-| OSM construction / night closures | same script, Overpass scan along every route | every Monday |
+| OSM construction / night closures | same script, Overpass scan along every route (max 105 min per run; resumes next week where it stopped, see `closures/osm-scan.json`) | every Monday |
 | hand-checked closures (abroad, mapy.com, riders) | `closures/manual.json`, edited by the weekly Claude task | weekly |
 | new routes | `routes.yml` queue → `tools/build_routes.py` builds from OpenStreetMap relations | one per week |
 

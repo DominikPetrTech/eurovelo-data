@@ -226,27 +226,44 @@ def boxes(rl, step=60000, pad=0.003):
     return out
 
 
+OSM_STATE = ROOT / "closures/osm-scan.json"   # where the last (unfinished) scan stopped
+
+
 def scan_osm(routes, log):
-    """Returns (items, ids of routes scanned completely). Routes are taken in an order that rotates
-    every week, so when the time budget runs out it's a different route that waits for next week."""
+    """Returns (items, ids of routes scanned completely this run). Overpass is often too slow to scan
+    every route in one run, so the scan resumes where the last run stopped (closures/osm-scan.json),
+    stops at the time budget or after several failed boxes in a row, and saves its position."""
     found, done = {}, set()
     ids = list(routes)
-    k = TODAY.isocalendar()[1] % len(ids) if ids else 0
-    for rid in ids[k:] + ids[:k]:
+    try:
+        st = json.loads(OSM_STATE.read_text())
+    except Exception:  # noqa: BLE001
+        st = {}
+    k = ids.index(st["route"]) if st.get("route") in ids else 0
+    first_box = int(st.get("box", 0)) if st.get("route") in ids else 0
+    order = ids[k:] + ids[:k]
+    fails, stop = 0, None
+    for ri, rid in enumerate(order):
         rl = routes[rid]
         bxs, ok = boxes(rl), True
-        for n, bb in enumerate(bxs):
+        b0 = first_box if ri == 0 else 0
+        if b0 >= len(bxs):
+            b0 = 0
+        for n in range(b0, len(bxs)):
+            bb = bxs[n]
             if time.time() - T0 > OSM_BUDGET_MIN * 60:
-                log.append(f"OSM scan stopped at the {OSM_BUDGET_MIN:.0f} min budget on {rid} ({n}/{len(bxs)} boxes); "
-                           "last week's OSM items kept for unfinished routes")
-                say(log[-1])
-                return osm_items(found), done
+                stop = (rid, n, f"the {OSM_BUDGET_MIN:.0f} min budget")
+                break
+            if fails >= 6:
+                stop = (rid, max(b0, n - fails), "6 failed boxes in a row (Overpass overloaded?)")
+                break
             j = overpass(OSM_Q.format(bb=",".join(f"{v:.4f}" for v in bb)), log, tries=3, timeout=150)
             time.sleep(2)
             if not j:
                 log.append(f"OSM box skipped on {rid}: {bb}")
-                ok = False
+                ok, fails = False, fails + 1
                 continue
+            fails = 0
             for w in j.get("elements", []):
                 if w.get("type") != "way" or not w.get("geometry"):
                     continue
@@ -259,9 +276,19 @@ def scan_osm(routes, log):
                     continue
                 geom = {"type": "LineString", "coordinates": [[round(p["lon"], 6), round(p["lat"], 6)] for p in w["geometry"]]}
                 found[w["id"]] = (geom, tags, night)
-        if ok:
+        if stop:
+            break
+        if ok and b0 == 0:
             done.add(rid)
-        say(f"OSM {rid}: {len(bxs)} boxes{'' if ok else ' (some skipped)'}, {len(found)} ways so far")
+        say(f"OSM {rid}: boxes {b0}-{len(bxs)}{'' if ok else ' (some skipped)'}, {len(found)} ways so far")
+    if stop:
+        rid, n, why = stop
+        log.append(f"OSM scan stopped at {why} on {rid} (box {n}/{len(boxes(routes[rid]))}); "
+                   "next run resumes there; last week's OSM items kept for unfinished routes")
+        say(log[-1])
+        OSM_STATE.write_text(json.dumps({"route": rid, "box": n, "stopped": TODAY.isoformat()}) + "\n")
+    else:
+        OSM_STATE.write_text(json.dumps({"route": ids[0] if ids else None, "box": 0, "completed": TODAY.isoformat()}) + "\n")
     return osm_items(found), done
 
 

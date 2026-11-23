@@ -43,6 +43,8 @@ routes:
   name: EuroVelo 14 · Waters of Central Europe
   osm: relation[route=bicycle][network=icn][ref="EV14"]
   status: live
+  note: 'OSM relation lacks the section [HU]_6 Budapest – Gödöllő: 19 km gap between 19.1366,47.5037 and 19.3496,47.5964
+    (checked 2026-11-23). Rebuild (status build) once it is mapped in OSM.'
   built:
     date: '2026-11-18'
     km: 1130

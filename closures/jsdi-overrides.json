@@ -240,6 +240,48 @@
   "7147645": {
    "skip": true,
    "note": "same closure as ev9-cz-zeruvky-iii5709-2026 in manual.json (which has the signed detour)"
+  },
+  "7416888": {
+   "skip": true,
+   "note": "fallen tree on road 388 near Bystřice nad Pernštejnem, 23 Nov 12:10–13:10 only; already cleared"
+  },
+  "7416112": {
+   "skip": true,
+   "note": "moving maintenance vehicle on I/27 Borovy – Železná Ruda (one lane, 23 Nov only); no effect worth a warning"
+  },
+  "7310439": {
+   "title": {
+    "cs": "Otrokovice, ulice K. Čapka: úplná uzavírka (nové křižovatky)",
+    "en": "Otrokovice, K. Čapka street: full closure (new junctions)"
+   },
+   "detour": {
+    "cs": "Úřední objížďka: tř. Tomáše Bati (III/36746) a III/36745.",
+    "en": "Official detour: Tomáše Bati avenue (III/36746) and III/36745."
+   },
+   "kind": "closure"
+  },
+  "7413244": {
+   "title": {
+    "cs": "Zlatá Koruna: silnice III/1596 uzavřena 1.–4. 12. (stavební práce)",
+    "en": "Zlatá Koruna: road III/1596 closed 1–4 Dec (construction)"
+   },
+   "detour": {
+    "cs": "Úřední objížďka přes Srnín a místní komunikaci u Rájova.",
+    "en": "Official detour via Srnín and the local road near Rájov."
+   },
+   "kind": "closure",
+   "note": "follows jsdi-7053336 (same road, ends 30 Nov); not a duplicate"
+  },
+  "7411559": {
+   "title": {
+    "cs": "Litovel, ulice 1. máje: úplná uzavírka (stavební práce) do 7. 12.",
+    "en": "Litovel, 1. máje street: full closure (construction) until 7 Dec"
+   },
+   "detour": {
+    "cs": "Úřední objížďka pro auta je jednosměrná (Havlíčkova, Dukelská II/449); na kole objeďte uzavřený úsek okolními ulicemi.",
+    "en": "The official car detour is one-way (Havlíčkova, Dukelská II/449); by bike go round the closed bit on nearby streets."
+   },
+   "kind": "closure"
   }
  }
 }
