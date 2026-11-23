@@ -1258,6 +1258,35 @@
     ]
    },
    "approx": false
+  },
+  {
+   "id": "ev2-gb-maidenhead-windsor-ncn4-2026",
+   "kind": "caution",
+   "title": {
+    "cs": "Maidenhead – Windsor: cyklotrasa NCN 4 zcela uzavřena (opravy)",
+    "en": "Maidenhead – Windsor: National Cycle Network Route 4 fully closed (repairs)"
+   },
+   "from": "2026-11-01",
+   "to": "2027-06-30",
+   "detour": {
+    "cs": "Náhradní trasa přes Monkey Island Lane a Windsor Road (společná stezka vedle frekventované silnice, jen pro cyklisty a pěší).",
+    "en": "Alternative route via Monkey Island Lane and Windsor Road (shared-use path beside a busy road, cyclists and pedestrians only)."
+   },
+   "source": "https://www.walkwheelcycletrust.org.uk/national-cycle-network/route-closures-and-diversions-in-england-and-wales/",
+   "routes": [
+    "ev2"
+   ],
+   "slice": {
+    "a": [
+     -0.71939,
+     51.51864
+    ],
+    "b": [
+     -0.60857,
+     51.48457
+    ]
+   },
+   "geometry_precision": "Zdroj uvádí jen 'mezi Maidenhead a Windsorem' bez přesných konců; úsek je celá trasa Maidenhead – Windsor (odhad), proto caution."
   }
  ]
 }
