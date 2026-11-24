@@ -26,13 +26,15 @@ export async function fetchData(path, { timeout = 6000 } = {}) {
   return r.json();
 }
 
-/** Bike route from → to, avoiding polygons. Returns {coords, maneuvers}. */
-export async function valhallaRoute(from, to, { avoid = [], via = [], lang = "cs" } = {}) {
+/** Route from → to by bike (default) or on foot (travel: "walk"), avoiding polygons. Returns {coords, maneuvers}. */
+export async function valhallaRoute(from, to, { avoid = [], via = [], lang = "cs", travel = "bike" } = {}) {
+  const walk = travel === "walk";
   const body = {
     // via: points of a signed detour; "through" makes the route pass them without a stop or a U-turn
     locations: [{ lon: from[0], lat: from[1] }, ...via.map(([lon, lat]) => ({ lon, lat, type: "through" })), { lon: to[0], lat: to[1] }],
-    costing: "bicycle",
-    costing_options: { bicycle: { bicycle_type: "Hybrid", use_roads: 0.3, use_hills: 0.4 } },
+    costing: walk ? "pedestrian" : "bicycle",
+    costing_options: walk ? { pedestrian: { walking_speed: 4.5, use_tracks: 0.6, walkway_factor: 0.9 } }
+      : { bicycle: { bicycle_type: "Hybrid", use_roads: 0.3, use_hills: 0.4 } },
     directions_options: { units: "kilometers", language: lang === "cs" ? "cs-CZ" : "en-US" },
     elevation_interval: 50,
   };

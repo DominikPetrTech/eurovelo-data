@@ -224,3 +224,8 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--sign); outl
 
 .legal-links { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
 .legal-links a { color: var(--muted); }
+
+/* bike / on foot */
+.seg.travel { display: flex; margin: 0 0 10px; }
+.seg.travel button { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.seg.travel svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }

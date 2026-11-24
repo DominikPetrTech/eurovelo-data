@@ -247,6 +247,34 @@ function segDist(p, a, b) {
  * Maneuvers inside a removed stretch collapse onto the point where it rejoins
  * (the last one wins: that's the real turn); U-turns are dropped.
  */
+/**
+ * A routed leg that starts by going the wrong way up a street and turning back (or ends by riding
+ * past the target and coming back): cut that out-and-back off. Only true retracing counts, so
+ * hairpin bends on a climb are left alone.
+ */
+export function trimSpurEnds(coords, maneuvers = [], tol = 25, maxSpur = 600) {
+  if (coords.length < 4) return { coords, maneuvers };
+  const retraced = (L, a, b) => { // does the path between a and b go out and come back the same way?
+    let far = a, fd = 0;
+    for (let d = a; d <= b; d += 5) { const g = haversine(L.pointAt(a), L.pointAt(d)); if (g > fd) { fd = g; far = d; } }
+    if (fd < 15) return false;
+    let n = 0, same = 0;
+    for (let d = a + 5; d < far; d += 10) { n++; const q = L.pointAt(d); for (let e = far; e <= b; e += 5) if (haversine(q, L.pointAt(e)) < 20) { same++; break; } }
+    return n > 0 && same / n > 0.7;
+  };
+  let L = new Line(coords), cut0 = 0, cut1 = L.length;
+  for (let t = Math.min(maxSpur, L.length - 10); t >= 30; t -= 5)
+    if (haversine(L.pointAt(0), L.pointAt(t)) < tol && retraced(L, 0, t)) { cut0 = t; break; }
+  for (let t = Math.min(maxSpur, L.length - cut0 - 10); t >= 30; t -= 5)
+    if (haversine(L.pointAt(L.length), L.pointAt(L.length - t)) < tol && retraced(L, L.length - t, L.length)) { cut1 = L.length - t; break; }
+  if (cut0 === 0 && cut1 === L.length) return { coords, maneuvers };
+  const i0 = L.cum.findIndex((c) => c > cut0), i1 = L.cum.findIndex((c) => c >= cut1);
+  const a = Math.max(1, i0), b = i1 < 0 ? coords.length - 1 : i1;
+  const out = [L.pointAt(cut0), ...coords.slice(a, b), L.pointAt(cut1)];
+  const mm = maneuvers.filter((m) => m.i >= a && m.i < b).map((m) => ({ ...m, i: m.i - a + 1 }));
+  return { coords: out, maneuvers: mm };
+}
+
 export function removeLoops(coords, maneuvers = [], tol = 10, maxLoop = 4000) {
   const n = coords.length;
   if (n < 4) return { coords, maneuvers };
@@ -324,7 +352,8 @@ export async function planRide(route, start, dest, router, opts = {}) {
   async function leg(kind, from, to, avoid) {
     try {
       const raw = await router(from, to, { avoid, lang });
-      const r = removeLoops(raw.coords, raw.maneuvers || []);
+      const l0 = removeLoops(raw.coords, raw.maneuvers || []);
+      const r = trimSpurEnds(l0.coords, l0.maneuvers);
       parts.push({ kind, coords: r.coords, maneuvers: r.maneuvers || [] });
     } catch (e) {
       failed.push({ kind, error: String(e && e.message || e) });
@@ -412,8 +441,8 @@ export async function planRide(route, start, dest, router, opts = {}) {
       if (ahead(floor, enter) > 0) enter = floor;
       if (ahead(exit, ceil) > 0) exit = ceil;
       try {
-        const raw = await router(ev.pointAt(enter), ev.pointAt(exit), { avoid: vp ? [] : avoid, via: vp || [], lang });
-        let { coords: dc, maneuvers: dm } = removeLoops(raw.coords, raw.maneuvers || []);
+        const raw = await router(ev.pointAt(enter), ev.pointAt(exit), { avoid, via: vp || [], lang });
+        let { coords: dc, maneuvers: dm } = (() => { const l0 = removeLoops(raw.coords, raw.maneuvers || []); return trimSpurEnds(l0.coords, l0.maneuvers); })();
         if (vp) { // sanity check on the signed detour: a bad waypoint can send the rider on a 15 km loop
           const len = new Line(dc).length, closed = Math.abs(exit - enter);
           if (len > Math.max(8000, 6 * closed)) throw new Error("signed detour too long");
@@ -461,6 +490,53 @@ export async function planRide(route, start, dest, router, opts = {}) {
         ex.maneuvers = ex.maneuvers.filter((m) => m.i >= run.idx).map((m) => ({ ...m, i: m.i - run.idx }));
       }
     }
+  }
+
+  // ---- no "ride there and come back" between pieces ----
+  // A piece (exit leg, detour, the EuroVelo stretch after an approach…) can start by going back
+  // over the end of the previous piece: the rider would be sent past the turn-off and then turned
+  // around. Cut both at the point where they really part.
+  for (let pi = parts.length - 1; pi >= 0; pi--) // crumbs left between two pieces would hide the overlap
+    if (parts.length > 1 && !parts[pi].straight && new Line(parts[pi].coords).length < 5) parts.splice(pi, 1);
+  for (let pi = 1; pi < parts.length; pi++) {
+    const A = parts[pi - 1], B = parts[pi];
+    if (A.straight || B.straight || A.coords.length < 2 || B.coords.length < 2) continue;
+    const LA = new Line(A.coords), LB = new Line(B.coords);
+    let prevD = LA.length, lastT = 0, lastD = LA.length;
+    for (let t = 5; t < Math.min(LB.length, 3000); t += 5) {
+      const pr = LA.project(LB.pointAt(t), Math.max(0, LA.length - 3000));
+      if (pr.dist > 20 || pr.d > prevD + 3) break;
+      prevD = pr.d; lastT = t; lastD = pr.d;
+    }
+    if (lastT < 25 || LA.length - lastD < 25) {
+      // a short spike where the pieces meet (A runs a few metres on to the EuroVelo line, B starts back
+      // from there): cut both where they come closest within the last/first 60 m
+      let best = null;
+      for (let ba = 0; ba <= Math.min(60, LA.length - 1); ba += 5)
+        for (let fb = 0; fb <= Math.min(60, LB.length - 1); fb += 5) {
+          const g = haversine(LA.pointAt(LA.length - ba), LB.pointAt(fb));
+          if (g < 12 && ba + fb > 20 && (!best || ba + fb > best.ba + best.fb)) best = { ba, fb };
+        }
+      if (!best) continue;
+      lastD = LA.length - best.ba; lastT = best.fb;
+    }
+    lastD = Math.max(1, lastD); lastT = Math.min(LB.length - 1, lastT);
+    // trim the end of A
+    if (A.kind === "ev") { A.to = A.from + dir * lastD; A.coords = ev.slice(A.from, A.to); }
+    else {
+      const keep = LA.cum.findIndex((c) => c > lastD); const k = keep < 0 ? A.coords.length - 1 : keep;
+      A.coords = [...A.coords.slice(0, k), LA.pointAt(lastD)];
+      A.maneuvers = (A.maneuvers || []).filter((m) => m.i < k);
+    }
+    // trim the start of B
+    if (B.kind === "ev") { B.from = B.from + dir * lastT; B.coords = ev.slice(B.from, B.to); }
+    else {
+      const k = Math.max(1, LB.cum.findIndex((c) => c > lastT));
+      B.coords = [LB.pointAt(lastT), ...B.coords.slice(k)];
+      B.maneuvers = (B.maneuvers || []).filter((m) => m.i >= k).map((m) => ({ ...m, i: m.i - k + 1 }));
+    }
+    // A shrank to nothing: drop it and check B against the piece before A too
+    if (new Line(A.coords).length < 5 && pi >= 2) { parts.splice(pi - 1, 1); pi -= 2; }
   }
 
   // ---- assemble one line + one maneuver list with chainage along it ----

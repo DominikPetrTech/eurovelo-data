@@ -4,11 +4,18 @@ import { registerProtocol, loadStyle, tripUrls, download, countCached, clearTile
 import { townsAlong, splitDays, fetchArea, pickTown, rankStays, bookingUrl, makeEffort, nextTarget } from "./nights.js";
 
 const ROUTES_URL = "data/routes.json";
-const DEFAULT_SPEED = 16 / 3.6; // m/s, touring bike
+// Bike or on foot: speed for times, distance per day for overnight stops, router profile.
+const TRAVEL = {
+  bike: { speed: 16 / 3.6, sim: 25 / 3.6, paces: [50, 80, 110], pace: 80, minFix: 1.5 },
+  walk: { speed: 4.5 / 3.6, sim: 5 / 3.6, paces: [15, 25, 35], pace: 25, minFix: 0.4 },
+};
+const tv = () => TRAVEL[S.travel] || TRAVEL.bike;
+const speedNow = () => tv().speed;
+const router = (from, to, o) => valhallaRoute(from, to, { ...o, travel: S.travel });
 
 const I18N = {
   cs: {
-    installTitle: "Nainstalujte si EuroVelo Nav", privacy: "Ochrana soukromí", terms: "Podmínky užití", licenses: "Zdroje dat", install: "Instalovat",
+    bike: "Na kole", walk: "Pěšky", installTitle: "Nainstalujte si EuroVelo Nav", privacy: "Ochrana soukromí", terms: "Podmínky užití", licenses: "Zdroje dat", install: "Instalovat",
     installAndroid: "Funguje jako aplikace, i bez signálu.",
     installIos: "Klepněte na {share} Sdílet a pak na „Přidat na plochu“.",
     where: "Kam jedeme?", change: "Změnit", go: "Jet", simulate: "Simulace", stop: "Konec",
@@ -16,14 +23,14 @@ const I18N = {
     planning: "Plánuji trasu…", replanning: "Mimo trasu, přepočítávám…", noGps: "Polohu nezjistím. Ťukněte do mapy, odkud jedete.",
     startSet: "Start nastaven. Teď vyberte cíl.", tapStart: "Ťukněte do mapy pro start",
     hint: "Vyhledejte místo, nebo podržte prst na mapě. Navigace vás dovede na nejbližší EuroVelo a po něm do cíle.",
-    avoided: "Objíždíme uzavírku", avoidedSigned: "Objížďka po značené trase", caution: "Pozor", report: "Hlášení cyklistů (neověřeno)", until: "do",
+    avoided: "Objíždíme uzavírku", avoidedSigned: "Objížďka po značené trase", caution: "Pozor", report: "Hlášení uživatelů (neověřeno)", until: "do",
     routerFail: "Část trasy nešla naplánovat, vede přímou čarou", arrived: "Jste v cíli",
     search_err: "Hledání nefunguje, zkuste to znovu.", noResults: "Nic nenalezeno.", searching: "Hledám…", searching_slow: "Vyhledávání trvá déle, server je vytížený. Pořád hledám…", search_slow: "Vyhledávací server neodpovídá. Zkuste to znovu nebo vyberte město z trasy.", destPin: "Bod na mapě",
     simulating: "Simulace jízdy", approach: "na EV", exit: "z EV", closureAhead: "Uzavírka před vámi",
     detourVia: "Objížďka", offline: "Mapa se nenačetla (offline?)", data: "Uzavírky ověřeny",
     switched: "Trasa přepnuta na", loadingRoute: "Načítám trasu…",
     offDl: "Stáhnout mapu offline", offSize: "≈ {mb} MB", offProgress: "Stahuji mapu… {p} %", offDone: "Mapa trasy je offline", offPart: "Staženo {p} %, zkuste znovu",
-    offCancel: "Zrušit", offDelete: "Smazat", offNoNet: "Bez signálu. Jeďte po vyznačené trase, přepočítám, až bude signál.",
+    offCancel: "Zrušit", offDelete: "Smazat", offNoNet: "Bez signálu. Pokračujte po vyznačené trase, přepočítám, až bude signál.",
     savedTrip: "Uložená trasa", resume: "Pokračovat", offStorage: "V telefonu není místo",
     climb: "stoupání", sleep: "Přespání", perDay: "km/den", depart: "Odjezd", night: "Noc", day: "den",
     tripHint: "Zadejte datum odjezdu: doplním dny, odkazy na rezervaci na konkrétní noc a vyřadím zavřené kempy.",
@@ -34,7 +41,7 @@ const I18N = {
     kind_apartment: "apartmán", kind_alpine_hut: "chata", kind_chalet: "chata", kind_wilderness_hut: "útulna",
   },
   en: {
-    installTitle: "Install EuroVelo Nav", privacy: "Privacy", terms: "Terms of use", licenses: "Data sources", install: "Install",
+    bike: "By bike", walk: "On foot", installTitle: "Install EuroVelo Nav", privacy: "Privacy", terms: "Terms of use", licenses: "Data sources", install: "Install",
     installAndroid: "Works like an app, even with no signal.",
     installIos: "Tap {share} Share, then “Add to Home Screen”.",
     where: "Where to?", change: "Change", go: "Go", simulate: "Simulate", stop: "End",
@@ -62,7 +69,8 @@ const I18N = {
 };
 
 const S = {
-  lang: load("lang", "cs"), voice: load("voice", "1") === "1", pace: Number(load("pace", "80")) || 80, tripDate: null,
+  lang: load("lang", "cs"), voice: load("voice", "1") === "1", travel: load("travel", "bike") === "walk" ? "walk" : "bike",
+  pace: Number(load(load("travel", "bike") === "walk" ? "pace_walk" : "pace", load("travel", "bike") === "walk" ? "25" : "80")) || 80, tripDate: null,
   route: null, start: null, startIsGps: false, dest: null, destName: "", destSub: "",
   plan: null, nav: null, mode: "search", watch: null, sim: null, follow: true,
   lastFix: null, lastReplan: 0, speeds: [], wake: null, setStartByTap: false,
@@ -369,7 +377,7 @@ async function doPlan(fromFix) {
       || [{ id: S.route.id, num: S.route.num, short: S.route.short, long: S.route.long, from: start, to: S.dest }];
     const routes = {};
     for (const l of legs) routes[l.id] = await getRoute(l.id);
-    const plan = await planNetwork(routes, legs, valhallaRoute, { lang: S.lang });
+    const plan = await planNetwork(routes, legs, router, { lang: S.lang });
     if (!fromFix && legs[0].id !== S.route.id) { await loadRoute(legs[0].id); renderChips(); }
     S.plan = plan;
     drawPlan(plan);
@@ -398,7 +406,7 @@ function showPreview() {
   computeNights();
   $("dest-name").textContent = S.destName;
   $("dest-sub").textContent = S.destSub;
-  const secs = p.length / DEFAULT_SPEED;
+  const secs = p.length / speedNow();
   $("stats").innerHTML =
     `<div><b>${fmtDist(p.length, S.lang)}</b><span>${t("total")}</span></div>` +
     `<div><b>${fmtDist(p.evLength, S.lang)}</b><span>${t("onEv")}</span></div>` +
@@ -600,7 +608,7 @@ function drawNights() {
   last.innerHTML = `<span class="night-n">◎</span><span><b>${esc(S.destName)}</b><small>${S.tripDate ? fmtDay(nightDate(nights.length + 1)) + " · " : ""}${t("day")} ${nights.length + 1}: ${fmtDist(p.length - prev, S.lang)}${climbTxt(prev, p.length)}</small></span>`;
   ol.appendChild(last);
   drawProfile();
-  $("stats").querySelector(":scope > div:nth-child(3) b").textContent = fmtDuration(p.length / DEFAULT_SPEED);
+  $("stats").querySelector(":scope > div:nth-child(3) b").textContent = fmtDuration(p.length / speedNow());
 }
 async function refineNights() {
   const ctl = (tripCtl = new AbortController()), p = S.plan, line = p.line, per = S.pace * 1000;
@@ -671,12 +679,12 @@ async function startRide(simulate) {
 function startSim() {
   const line = new Line(S.plan.coords);
   let d = 0, last = performance.now();
-  const speed = 25 / 3.6 * 4; // 4× real time at 25 km/h
+  const speed = tv().sim * 4; // 4× real time
   toast(t("simulating"), 2500);
   S.sim = setInterval(() => {
     const now = performance.now(); d += speed * (now - last) / 1000; last = now;
     const p = line.pointAt(d);
-    onFix([p[0] + (Math.random() - .5) * 0.00004, p[1] + (Math.random() - .5) * 0.00003], 6, 25 / 3.6);
+    onFix([p[0] + (Math.random() - .5) * 0.00004, p[1] + (Math.random() - .5) * 0.00003], 6, tv().sim);
     if (d >= line.length + 30) { clearInterval(S.sim); S.sim = null; }
   }, 400);
 }
@@ -684,7 +692,7 @@ function startSim() {
 async function onFix(ll, acc, speed) {
   if (S.mode !== "ride") return;
   S.lastFix = ll;
-  if (speed > 1.5) { S.speeds.push(speed); if (S.speeds.length > 30) S.speeds.shift(); }
+  if (speed > tv().minFix) { S.speeds.push(speed); if (S.speeds.length > 30) S.speeds.shift(); }
   const st = S.nav.update(ll, acc);
   const show = st.snapDist < 30 ? st.snapped : ll;
   placePuck(show, st.heading);
@@ -726,7 +734,7 @@ function renderWarn(st) {
   box.innerHTML = `<b>${head} · ${fmtDist(Math.max(0, w.ahead), S.lang)}</b>${esc(w.title?.[S.lang] || w.title?.cs || "")}`;
 }
 function renderRideStats(st) {
-  const v = S.speeds.length ? S.speeds.reduce((a, b) => a + b) / S.speeds.length : DEFAULT_SPEED;
+  const v = S.speeds.length ? S.speeds.reduce((a, b) => a + b) / S.speeds.length : speedNow();
   const eta = new Date(Date.now() + st.remaining / v * 1000);
   $("ride-left").textContent = fmtDist(st.remaining, S.lang);
   $("ride-eta").textContent = eta.toLocaleTimeString(S.lang === "cs" ? "cs-CZ" : "en-GB", { hour: "2-digit", minute: "2-digit" });
@@ -795,7 +803,7 @@ function fmtDate(iso) {
 function fmtDuration(s) {
   const h = Math.floor(s / 3600), m = Math.round((s % 3600) / 60);
   if (h >= 10) { // a multi-day trip: days at ~80 km/day are more useful than hours
-    const days = S.plan?.nights ? S.plan.nights.length + 1 : Math.max(1, Math.round((s * DEFAULT_SPEED) / (S.pace * 1000)));
+    const days = S.plan?.nights ? S.plan.nights.length + 1 : Math.max(1, Math.round((s * speedNow()) / (S.pace * 1000)));
     return S.lang === "cs" ? `≈ ${days} ${days === 1 ? "den" : days < 5 ? "dny" : "dní"}` : `≈ ${days} day${days === 1 ? "" : "s"}`;
   }
   return h ? `${h} h ${m} min` : `${m} min`;
@@ -831,7 +839,7 @@ async function boot() {
   $("q").addEventListener("input", onSearchInput);
   $("q").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); $("results").querySelector("button")?.click(); } });
   document.querySelectorAll("#pace button").forEach((b) => (b.onclick = () => {
-    S.pace = Number(b.dataset.v); save("pace", S.pace); if (S.plan) S.plan.repaced = true; showPreview();
+    S.pace = Number(b.dataset.v); save(S.travel === "walk" ? "pace_walk" : "pace", S.pace); if (S.plan) S.plan.repaced = true; showPreview();
   }));
   // the date only changes labels, Booking links and which campsites are open: re-rank, no new requests
   const redate = () => {
@@ -859,6 +867,7 @@ async function boot() {
   };
   document.querySelector(".ev-badge").addEventListener("click", showRoutePicker);
   if ("speechSynthesis" in window) speechSynthesis.getVoices();
+  setupTravel();
   setupInstall();
   if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1")) navigator.serviceWorker.register("sw.js").catch(() => {});
   // ask for location quietly; the app works without it (tap the map to set start)
@@ -869,6 +878,26 @@ async function boot() {
     // near the route? show your surroundings; far away? keep the whole route in view
     if (S.route.ev.project(S.start).dist < 30000) map.easeTo({ center: S.start, zoom: 11, duration: 800 });
   });
+}
+
+// ---------------------------------------------------------------- bike / on foot
+function renderTravel() {
+  document.querySelectorAll("#travel button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === S.travel));
+  // per-day choices follow the mode (km/day on foot is a third of the bike's)
+  const btns = document.querySelectorAll("#pace button");
+  tv().paces.forEach((v, i) => { if (btns[i]) { btns[i].dataset.v = v; btns[i].textContent = v; } });
+  document.querySelectorAll("#pace button").forEach((b) => b.setAttribute("aria-pressed", Number(b.dataset.v) === S.pace));
+  document.body.dataset.travel = S.travel;
+}
+function setupTravel() {
+  renderTravel();
+  document.querySelectorAll("#travel button").forEach((b) => (b.onclick = () => {
+    if (b.dataset.v === S.travel) return;
+    S.travel = b.dataset.v; save("travel", S.travel);
+    S.pace = Number(load(S.travel === "walk" ? "pace_walk" : "pace", String(tv().pace))) || tv().pace;
+    renderTravel();
+    if (S.dest && S.mode !== "ride") doPlan(); // times, detours and overnight stops change with the mode
+  }));
 }
 
 // ---------------------------------------------------------------- install offer

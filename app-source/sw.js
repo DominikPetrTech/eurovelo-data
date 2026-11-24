@@ -3,7 +3,7 @@
 // the cache is the fallback when there isn't. The map library is kept cache-first.
 // Downloaded map tiles and the saved trip live in their own caches (js/offline.js)
 // and survive app updates. Routing to a new destination still needs signal.
-const VERSION = "evnav-v21";
+const VERSION = "evnav-v22";
 const SHELL = ["./", "data/routes.json", "css/app.css", "css/fonts.css", "lib/maplibre-gl.js", "lib/maplibre-gl.css", "legal/legal.css", "legal/privacy.html", "legal/terms.html", "legal/licenses.html", "js/app.js", "js/core.js", "js/services.js", "js/nights.js", "js/offline.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
 const DATA = /\/data\/.+\.json$/;
 const LIBS = "evnav-libs"; // versioned URLs (maplibre-gl@4.7.1): never stale

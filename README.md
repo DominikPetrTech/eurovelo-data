@@ -33,6 +33,9 @@ Data: © OpenStreetMap contributors (ODbL); EuroVelo GPX © ECF/EuroVelo (ODbL);
 planner (`app-source/`, a copy of the app as deployed) and the public Valhalla router, and writes
 `closures/checks.md` / `checks.json`: route gaps, zigzags, a line that doubles back, expired or reversed dates,
 duplicate closures, and for every active closure whether the detour was found, how long it is, and whether it
-runs through another closure. The weekly Claude task reads it and fixes what it can.
+runs through another closure. It also plans random trips (`CHECK_TRIPS` per route, default 8; half near
+active closures, both directions, starts 100–1000 m off the route, every third one on foot) and flags
+"there and back" (retracing, U-turns over 150°) and planned detour/approach/exit/link spans that run on a
+closure. Findings on `ev` spans are low (route data); on planner spans high. The weekly Claude task reads it and fixes what it can.
 
 `app-source/` is the app's source (what is uploaded to nexisrail.cz/eurovelo) kept here as a backup and for the checks.
